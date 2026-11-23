@@ -1,0 +1,283 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>CintIA no site</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap">
+<style>
+/* Layout: faixa de "nota pro dev" no topo, depois a seção do site em tamanho real, depois a entrega (copy + specs). Visual travado no claro, igual ao site. */
+:root{
+  --bg:#FFFFFF;
+  --ink:#141414;
+  --ink-soft:#4A4550;
+  --muted:#7A7380;
+  --magenta:#DC36C0;
+  --magenta-ink:#B4209B;
+  --magenta-soft:#FBE3F5;
+  --yellow:#FDB92E;
+  --panel:#EDEEEF;
+  --line:#E7E2EA;
+  --wa-bg:#0B141A;
+  --wa-head:#1F2C34;
+  --wa-in:#1F2C34;
+  --wa-out:#005C4B;
+  --wa-text:#E9EDEF;
+  --wa-meta:#8696A0;
+  --font:"Open Sans", "Segoe UI", Roboto, Arial, sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:0 64px}
+.wrap{max-width:1180px;margin:0 auto}
+
+/* nota do topo */
+.brief{display:flex;flex-wrap:wrap;gap:8px 24px;align-items:baseline;justify-content:space-between;
+  border-bottom:1px solid var(--line);padding-block:20px 16px;margin-bottom:8px}
+.brief p{margin:0;color:var(--muted);font-size:13px}
+.brief strong{color:var(--ink)}
+.tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--magenta-ink);background:var(--magenta-soft);padding:3px 8px;border-radius:3px;margin-right:8px}
+
+/* ===== a seção do site ===== */
+.sec{padding-block:48px 56px}
+.sec h2{font-size:clamp(26px,3.4vw,38px);font-weight:600;letter-spacing:-.01em;line-height:1.2;margin:0 0 56px;padding-left:20px;text-wrap:balance}
+.sec h2 em{font-style:normal;color:var(--magenta)}
+.grid{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);gap:32px 30px;align-items:start}
+
+/* lado esquerdo: o mock */
+.stage{position:relative;background:var(--panel);height:464px;overflow:hidden;max-width:100%}
+.blk-m{position:absolute;right:62px;top:90px;width:76px;height:158px;background:var(--magenta)}
+.blk-y{position:absolute;left:42px;top:282px;width:62px;height:110px;background:var(--yellow)}
+.phone{position:absolute;left:50%;top:26px;transform:translateX(-50%);width:318px;height:520px;
+  border-radius:46px;background:#3D6E9A;padding:9px;box-shadow:0 12px 30px rgba(20,20,20,.18)}
+.screen{position:relative;height:100%;border-radius:38px;overflow:hidden;background:var(--wa-bg);
+  background-image:radial-gradient(rgba(255,255,255,.035) 1px, transparent 1px);background-size:14px 14px}
+.notch{position:absolute;left:50%;top:8px;transform:translateX(-50%);width:96px;height:24px;background:#000;border-radius:14px;z-index:3}
+.status{display:flex;justify-content:space-between;padding:12px 26px 0;color:#fff;font-size:12px;font-weight:600;height:36px}
+.wa-head{display:flex;align-items:center;gap:8px;background:var(--wa-head);padding:6px 12px 8px;color:var(--wa-text)}
+.wa-head .back{font-size:20px;line-height:1;color:var(--wa-text)}
+.wa-head img{width:34px;height:34px;border-radius:50%;object-fit:cover;background:var(--magenta)}
+.wa-head .who{flex:1;min-width:0}
+.wa-head .who b{display:block;font-size:13.5px;font-weight:600}
+.wa-head .who span{font-size:11px;color:var(--wa-meta)}
+.chat{display:flex;flex-direction:column;gap:5px;padding:10px 10px 0}
+.b{max-width:84%;padding:6px 8px 4px;border-radius:8px;font-size:12px;line-height:1.38;color:var(--wa-text);position:relative}
+.b.in{background:var(--wa-in);align-self:flex-start;border-top-left-radius:2px}
+.b.out{background:var(--wa-out);align-self:flex-end;border-top-right-radius:2px}
+.b .t{display:block;text-align:right;font-size:9.5px;color:var(--wa-meta);margin-top:1px}
+.b.out .t{color:#9FC9BE}
+.quote{display:grid;grid-template-columns:1fr auto;gap:1px 10px;margin:4px 0 2px;font-variant-numeric:tabular-nums}
+.quote span:nth-child(odd){color:#C5CDD2}
+.quote .low{color:#fff;font-weight:700}
+.quote .low-tag{grid-column:1/-1;font-size:10.5px;color:#7FD3B6;margin-top:-1px;margin-bottom:2px}
+
+/* o avatar grande */
+.hello{position:absolute;left:24px;top:24px;z-index:4;display:flex;align-items:center;gap:0}
+.hello img{width:132px;height:132px;border-radius:50%;object-fit:cover;border:4px solid var(--magenta);background:#fff;
+  box-shadow:0 10px 24px rgba(180,32,155,.28)}
+.hello .chip{margin-left:-14px;background:#fff;border-radius:999px;padding:8px 14px 8px 22px;font-size:13px;font-weight:600;
+  box-shadow:0 6px 16px rgba(20,20,20,.12);white-space:nowrap}
+.hello .chip small{display:block;font-size:11px;font-weight:400;color:var(--muted)}
+
+/* lado direito: copy */
+.copy{min-width:0;padding-top:6px}
+.acc h3{font-size:21px;font-weight:600;margin:0 0 12px}
+.eyebrow{margin:0 0 4px;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--magenta)}
+.lead{margin:0 0 22px;color:var(--ink);font-size:14.5px;max-width:58ch}
+.lead b{font-weight:700}
+.feats{list-style:none;margin:0 0 22px;padding:0;display:grid;gap:16px}
+.feats li{display:grid;grid-template-columns:22px 1fr;gap:8px}
+.feats svg{width:18px;height:18px;margin-top:2px}
+.feats b{display:block;font-size:14px}
+.feats p{margin:2px 0 0;font-size:14px;color:var(--ink-soft);max-width:56ch}
+.cta{display:inline-block;color:var(--magenta);font-weight:700;font-size:14px;text-decoration:none}
+.cta:hover,.cta:focus-visible{text-decoration:underline;outline:none}
+.fine{margin:10px 0 0;font-size:12px;color:var(--muted)}
+.rule{height:2px;background:linear-gradient(90deg,var(--yellow),var(--magenta));margin-block:18px}
+.closed{font-size:21px;font-weight:600;margin:0}
+
+/* ===== entrega pro dev ===== */
+.hand{border-top:1px solid var(--line);padding-top:40px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:40px}
+.hand h2{font-size:22px;font-weight:700;margin:0 0 6px}
+.hand .sub{margin:0 0 20px;color:var(--muted);font-size:13.5px}
+.field{border:1px solid var(--line);border-radius:6px;margin-bottom:12px}
+.field header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px 12px;border-bottom:1px solid var(--line);background:#FAF8FB}
+.field header span{font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.field pre{margin:0;padding:12px;white-space:pre-wrap;font-family:var(--font);font-size:14px;line-height:1.5;color:var(--ink)}
+button.copybtn{font:600 12px var(--font);color:var(--magenta-ink);background:none;border:1px solid var(--magenta-soft);border-radius:4px;padding:3px 10px;cursor:pointer}
+button.copybtn:hover,button.copybtn:focus-visible{background:var(--magenta-soft);outline:none}
+.specs{margin:0;padding:0;list-style:none;display:grid;gap:14px}
+.specs li{display:grid;gap:2px}
+.specs b{font-size:13px}
+.specs span{font-size:13.5px;color:var(--ink-soft)}
+.avatar-file{display:block;width:180px;height:180px;margin:6px 0 4px;border:1px solid var(--line);border-radius:6px}
+.specs code{font-size:12.5px;background:#F4F1F5;padding:1px 5px;border-radius:3px}
+.pend{margin-top:24px;border-left:3px solid var(--yellow);padding:4px 0 4px 14px}
+.pend b{font-size:13px}
+.pend ul{margin:6px 0 0;padding-left:18px;font-size:13.5px;color:var(--ink-soft);display:grid;gap:4px}
+
+@media (max-width:860px){
+  .grid,.hand{grid-template-columns:1fr}
+  .sec h2{padding-left:0;margin-bottom:32px}
+}
+@media (max-width:420px){
+  .hello img{width:104px;height:104px}
+  .hello .chip{font-size:12px}
+  .phone{transform:translateX(-50%) scale(.9);transform-origin:top center}
+}
+@media (prefers-reduced-motion:no-preference){
+  .hello img{animation:pop .5s ease-out both}
+  @keyframes pop{from{transform:scale(.92)}to{transform:scale(1)}}
+}
+</style>
+
+<div class="wrap">
+  <div class="brief">
+    <p><span class="tag">Proposta</span><strong>Seção "Recursos grátis" do site.</strong> Sai o ferramenta de falteiro, entra a CintIA. Mesmo layout, mesma posição.</p>
+    <p>Marketing · 21/10/2026</p>
+  </div>
+
+  <!-- ================= A SEÇÃO, COMO VAI FICAR NO SITE ================= -->
+  <section class="sec" aria-label="Prévia da seção">
+    <div class="grid">
+      <div class="stage" role="img" aria-label="Conversa no WhatsApp com a CintIA: a farmácia pede dipirona e recebe o preço em 6 distribuidoras, com o menor em destaque">
+        <div class="blk-m"></div>
+        <div class="blk-y"></div>
+
+        <div class="hello">
+          <img src="cintia-avatar-branco.png" alt="">
+          <div class="chip">Oi, eu sou a CintIA 👋<small>assistente de cotação da [Empresa]</small></div>
+        </div>
+
+        <div class="phone">
+          <div class="screen">
+            <div class="notch"></div>
+            <div class="status"><span>09:14</span><span>●●● 5G</span></div>
+            <div class="wa-head">
+              <span class="back">‹</span>
+              <img src="cintia-avatar-branco.png" alt="">
+              <div class="who"><b>CintIA</b><span>online</span></div>
+              <span>📞</span>
+            </div>
+            <div class="chat">
+              <div class="b out">dipirona 500mg<span class="t">09:14 ✓✓</span></div>
+              <div class="b in">Encontrei! <b>Dipirona Sódica 500mg 20cp</b><br>📦 6 distribuidoras têm hoje<span class="t">09:14</span></div>
+              <div class="b in">
+                Dipirona 500mg 20cp hoje:
+                <div class="quote">
+                  <span class="low">Distribuidora D</span><span class="low">R$ 1,21</span>
+                  <span class="low-tag">menor preço</span>
+                  <span>Distribuidora A</span><span>R$ 1,45</span>
+                  <span>Distribuidora F</span><span>R$ 1,60</span>
+                  <span>Distribuidora C</span><span>R$ 1,88</span>
+                  <span>Distribuidora G</span><span>R$ 2,02</span>
+                  <span>Distribuidora B</span><span>R$ 2,34</span>
+                </div>
+                <span class="t">09:14</span>
+              </div>
+              <div class="b in">Me salva aqui nos contatos como CintIA 💜 Quando precisar de preço, é só me chamar.<span class="t">09:14</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="copy">
+        <div class="acc">
+          <p class="eyebrow">Sua agente de cotação com IA</p>
+          <h3>CintIA no WhatsApp</h3>
+          <p class="lead">Envie o nome do remédio ou produto que sua farmácia precisa, direto pelo WhatsApp, e ela responde na hora quais distribuidoras têm o item e onde está o melhor preço.</p>
+          <ul class="feats">
+            <li>
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="10" cy="10" r="8"/><path d="M6.5 10.2l2.4 2.3 4.6-4.8"/></svg>
+              <div><b>Direto no WhatsApp, sem abrir nada</b><p>Sem baixar app, sem login e sem senha. É só mandar mensagem direto pelo WhatsApp que você já usa.</p></div>
+            </li>
+            <li>
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="10" cy="10" r="8"/><path d="M6.5 10.2l2.4 2.3 4.6-4.8"/></svg>
+              <div><b>Disponível sempre que você precisar</b><p>Salve a CintIA nos seus contatos e chame de dia, de noite ou no fim de semana.</p></div>
+            </li>
+            <li>
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="10" cy="10" r="8"/><path d="M6.5 10.2l2.4 2.3 4.6-4.8"/></svg>
+              <div><b>Faz o trabalho por você</b><p>Em segundos, você vê todas as distribuidoras e o melhor preço.</p></div>
+            </li>
+          </ul>
+          <a class="cta" href="#entrega">Chamar a CintIA no WhatsApp →</a>
+          <p class="fine">Grátis pra farmácias de São Paulo. Os valores são preços de referência do dia.</p>
+        </div>
+        <div class="rule"></div>
+        <p class="closed">Portal de encomendas</p>
+        <div class="rule"></div>
+        <p class="closed">quiz de compras</p>
+        <div class="rule"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ENTREGA PRO DEV ================= -->
+  <section class="hand" id="entrega">
+    <div>
+      <h2>Copy pra colar</h2>
+      <p class="sub">Substitui só o bloco "ferramenta de falteiro" (imagem da esquerda + texto da direita). O título da seção e os blocos do portal de encomendas e do quiz ficam como estão.</p>
+
+      <div class="field"><header><span>Linha de apoio (acima do título)</span><button class="copybtn" type="button">Copiar</button></header>
+        <pre>Sua agente de cotação com IA</pre></div>
+
+      <div class="field"><header><span>Título do bloco</span><button class="copybtn" type="button">Copiar</button></header>
+        <pre>CintIA no WhatsApp</pre></div>
+
+      <div class="field"><header><span>Descrição</span><button class="copybtn" type="button">Copiar</button></header>
+        <pre>Envie o nome do remédio ou produto que sua farmácia precisa, direto pelo WhatsApp, e ela responde na hora quais distribuidoras têm o item e onde está o melhor preço.</pre></div>
+
+      <div class="field"><header><span>Bullet 1</span><button class="copybtn" type="button">Copiar</button></header>
+        <pre>Direto no WhatsApp, sem abrir nada
+Sem baixar app, sem login e sem senha. É só mandar mensagem direto pelo WhatsApp que você já usa.</pre></div>
+
+      <div class="field"><header><span>Bullet 2</span><button class="copybtn" type="button">Copiar</button></header>
+        <pre>Disponível sempre que você precisar
+Salve a CintIA nos seus contatos e chame de dia, de noite ou no fim de semana.</pre></div>
+
+      <div class="field"><header><span>Bullet 3</span><button class="copybtn" type="button">Copiar</button></header>
+        <pre>Faz o trabalho por você
+Em segundos, você vê todas as distribuidoras e o melhor preço.</pre></div>
+
+      <div class="field"><header><span>Link + nota de rodapé</span><button class="copybtn" type="button">Copiar</button></header>
+        <pre>Chamar a CintIA no WhatsApp →
+Grátis pra farmácias de São Paulo. Os valores são preços de referência do dia.</pre></div>
+    </div>
+
+    <div>
+      <h2>Specs</h2>
+      <p class="sub">O que muda em relação ao bloco atual.</p>
+      <ul class="specs">
+        <li><b>Linha de apoio</b><span>Acima do título, 12px, caixa alta, magenta #DC36C0. Existe porque ninguém conhece a CintIA ainda: explica o que ela é antes do nome.</span></li>
+        <li><b>Imagem da esquerda</b><span>Mesmo painel cinza com os blocos magenta e amarelo. O print do celular vira a conversa com a CintIA (pode ser montado em HTML, como aqui, ou exportado como imagem).</span></li>
+        <li><b>Avatar grande</b><span>Círculo de 132px no canto superior esquerdo do painel, fundo branco com anel magenta #DC36C0 de 4px, sobrepondo o celular. Ao lado, o balão "Oi, eu sou a CintIA 👋". No mobile, 104px.</span></li>
+        <li><b>Foto da CintIA</b><span><img class="avatar-file" src="cintia-avatar-branco.png" alt="Avatar da CintIA, assistente de cotação da [Empresa]" width="180" height="180"><br>Arquivo original em 1024×1024. Pra baixar: clique com o botão direito na imagem e escolha "Salvar imagem como".</span></li>
+        <li><b>Arquivo do avatar</b><span><code>cintia-avatar-branco.png</code>, 1024×1024, fundo branco. Alt: <code>Avatar da CintIA, assistente de cotação da [Empresa]</code>.</span></li>
+        <li><b>Link do CTA</b><span><code>https://wa.me/55XXXXXXXXXXX?text=Oi%20CintIA</code> com UTM <code>utm_source=site&amp;utm_medium=recursos_gratis&amp;utm_campaign=cintia</code>.</span></li>
+        <li><b>Grafia</b><span>Sempre <b>CintIA</b>, com "IA" maiúsculo. Nunca "Cintia", "cotador" ou "assistente virtual".</span></li>
+      </ul>
+
+      <div class="pend">
+        <b>Antes de subir</b>
+        <ul>
+          <li>Número oficial do WhatsApp da CintIA pro link.</li>
+          <li>Avatar final aprovado (este é o da rodada de 09/10).</li>
+          <li>Confirmar que o bot roda 24h, inclusive fim de semana, já que a copy promete "a qualquer hora".</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+document.querySelectorAll('.copybtn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var pre = btn.closest('.field').querySelector('pre');
+    var done = function(){ btn.textContent = 'Copiado'; setTimeout(function(){ btn.textContent = 'Copiar'; }, 1500); };
+    var fallback = function(){ var r = document.createRange(); r.selectNodeContents(pre); var s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = 'Selecionado'; };
+    try { navigator.clipboard.writeText(pre.textContent).then(done, fallback); } catch(e){ fallback(); }
+  });
+});
+</script>
+
+</body></html>

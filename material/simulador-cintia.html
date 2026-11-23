@@ -1,0 +1,648 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>html{color-scheme:light}body{margin:0}</style>
+<title>Simulador CintIA</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: celular à esquerda tocando a conversa; à direita, a explicação do passo atual e o que acontece por trás */
+:root {
+  --bg: #EEEFF1;
+  --surface: #FFFFFF;
+  --ink: #2F2F32;
+  --muted: #6D7079;
+  --line: #DADCE2;
+  --magenta: #DC36C0;
+  --magenta-ink: #A3258E;
+  --magenta-soft: #FBE6F7;
+  --amber-soft: #FFF3D6;
+  --ok: #1F8A5B;
+  --ok-soft: #E2F4EB;
+  --no: #B3402F;
+  --no-soft: #FBE7E3;
+  --phone: #1C1B20;
+  --chat-bg: #EFE7DE;
+  --chat-head: #2B2A31;
+  --chat-head-ink: #FFFFFF;
+  --bub-in: #FFFFFF;
+  --bub-out: #D9FDD3;
+  --bub-ink: #1F1F22;
+  --bub-meta: #7A7D85;
+  --link: #0B6BCB;
+  --font: "Open Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #17161B; --surface: #211F26; --ink: #ECEAF0; --muted: #A09DAA; --line: #35323D;
+    --magenta: #F065D6; --magenta-ink: #F59BE3; --magenta-soft: #3A1E35; --amber-soft: #3A2F15;
+    --ok: #5BCB97; --ok-soft: #173327; --no: #F08A78; --no-soft: #3B1F1A;
+    --phone: #000000; --chat-bg: #0F1417; --chat-head: #202C33; --chat-head-ink: #E9EDEF;
+    --bub-in: #202C33; --bub-out: #005C4B; --bub-ink: #E9EDEF; --bub-meta: #9AA6AC; --link: #53BDEB;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #17161B; --surface: #211F26; --ink: #ECEAF0; --muted: #A09DAA; --line: #35323D;
+  --magenta: #F065D6; --magenta-ink: #F59BE3; --magenta-soft: #3A1E35; --amber-soft: #3A2F15;
+  --ok: #5BCB97; --ok-soft: #173327; --no: #F08A78; --no-soft: #3B1F1A;
+  --phone: #000000; --chat-bg: #0F1417; --chat-head: #202C33; --chat-head-ink: #E9EDEF;
+  --bub-in: #202C33; --bub-out: #005C4B; --bub-ink: #E9EDEF; --bub-meta: #9AA6AC; --link: #53BDEB;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 15px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 64px;
+}
+.wrap { max-width: 1040px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+h1, h2, h3 { margin: 0; line-height: 1.2; text-wrap: balance; }
+h1 { font-size: clamp(26px, 4.5vw, 36px); font-weight: 800; letter-spacing: -0.02em; }
+h2 { font-size: 20px; font-weight: 800; }
+h3 { font-size: 15px; font-weight: 700; }
+p { margin: 0; max-width: 66ch; }
+.eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--magenta-ink); }
+.lede { color: var(--muted); font-size: 16px; }
+code { font-family: var(--mono); font-size: 0.85em; background: var(--magenta-soft); color: var(--magenta-ink); padding: 1px 5px; border-radius: 3px; overflow-wrap: anywhere; }
+
+.tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+.tabs button {
+  font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 8px 14px;
+  display: flex; flex-direction: column; align-items: flex-start; gap: 0; text-align: left;
+}
+.tabs button small { font-weight: 400; color: var(--muted); font-size: 12px; }
+.tabs button[aria-selected="true"] { border-color: var(--magenta); box-shadow: inset 0 0 0 1px var(--magenta); }
+.tabs button:focus-visible, .ctl button:focus-visible, .wa-btn:focus-visible, .wa-link:focus-visible { outline: 2px solid var(--magenta); outline-offset: 2px; }
+
+.stage { display: grid; grid-template-columns: 360px minmax(0, 1fr); gap: 32px; align-items: start; }
+
+/* Celular */
+.phone { width: 100%; max-width: 360px; background: var(--phone); border-radius: 36px; padding: 12px; box-shadow: 0 20px 50px rgba(20, 10, 30, 0.18); }
+.screen { border-radius: 26px; overflow: hidden; height: 640px; display: flex; flex-direction: column; background: var(--chat-bg); position: relative; }
+.head { background: var(--chat-head); color: var(--chat-head-ink); display: flex; align-items: center; gap: 10px; padding: 14px 14px 12px; flex-shrink: 0; transition: background .3s; }
+.avatar { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 15px; color: #fff; flex-shrink: 0; }
+.avatar.cintia { background: linear-gradient(135deg, #DC36C0, #8B2BB8); }
+.avatar.seller { background: linear-gradient(135deg, #3A7BD5, #2A4F9E); }
+.head .who { display: flex; flex-direction: column; line-height: 1.2; min-width: 0; }
+.head .who b { font-size: 15px; }
+.head .who span { font-size: 12px; opacity: .75; }
+.msgs { flex: 1; overflow-y: auto; padding: 12px 10px 8px; display: flex; flex-direction: column; gap: 6px; scroll-behavior: smooth; }
+.day { align-self: center; font-size: 11px; color: var(--bub-meta); background: var(--bub-in); padding: 3px 10px; border-radius: 6px; margin-bottom: 4px; }
+.bub { max-width: 86%; padding: 7px 10px 5px; border-radius: 9px; font-size: 13.5px; line-height: 1.42; color: var(--bub-ink); position: relative; animation: pop .22s ease-out; overflow-wrap: anywhere; }
+.bub.in { background: var(--bub-in); align-self: flex-start; border-top-left-radius: 2px; }
+.bub.out { background: var(--bub-out); align-self: flex-end; border-top-right-radius: 2px; }
+.bub .t { display: block; text-align: right; font-size: 10.5px; color: var(--bub-meta); margin-top: 2px; }
+.bub.media { font-style: italic; color: var(--bub-meta); }
+.bub b { font-weight: 700; }
+.wa-link { color: var(--link); text-decoration: underline; word-break: break-all; cursor: pointer; }
+.btnrow { align-self: flex-start; width: 86%; display: flex; flex-direction: column; gap: 4px; animation: pop .22s ease-out; }
+.wa-btn { font: inherit; font-size: 13.5px; font-weight: 600; color: var(--link); background: var(--bub-in); border: 0; border-radius: 9px; padding: 9px; cursor: pointer; transition: transform .1s, filter .2s; }
+.wa-btn.tap { animation: tap .5s ease-out; }
+.wa-btn[disabled] { cursor: default; opacity: .55; }
+.wa-btn.chosen { opacity: 1; outline: 2px solid var(--link); }
+.card { align-self: flex-start; width: 78%; background: var(--bub-in); border-radius: 9px; overflow: hidden; animation: pop .22s ease-out; color: var(--bub-ink); }
+.card .top { display: flex; align-items: center; gap: 10px; padding: 10px; }
+.card .top b { font-size: 14px; }
+.card .top span { font-size: 12px; color: var(--bub-meta); display: block; }
+.card .add { border-top: 1px solid rgba(128,128,128,.25); text-align: center; color: var(--link); font-weight: 600; font-size: 13px; padding: 8px; }
+.typing { align-self: flex-start; background: var(--bub-in); border-radius: 9px; padding: 9px 12px; display: flex; gap: 4px; }
+.typing i { width: 6px; height: 6px; border-radius: 50%; background: var(--bub-meta); animation: dot 1s infinite; }
+.typing i:nth-child(2) { animation-delay: .15s; } .typing i:nth-child(3) { animation-delay: .3s; }
+.sys { align-self: center; text-align: center; font-size: 11.5px; color: var(--bub-meta); background: var(--bub-in); padding: 5px 10px; border-radius: 6px; max-width: 90%; animation: pop .22s ease-out; }
+.compose { flex-shrink: 0; display: flex; gap: 8px; align-items: flex-end; padding: 8px; }
+.compose .box { flex: 1; background: var(--bub-in); color: var(--bub-ink); border-radius: 20px; padding: 9px 14px; font-size: 13.5px; min-height: 38px; line-height: 1.4; transition: box-shadow .3s; }
+.compose .box.empty { color: var(--bub-meta); }
+.compose .box.filled { box-shadow: 0 0 0 2px var(--magenta); }
+.compose .send { width: 38px; height: 38px; border-radius: 50%; background: #1DAA61; display: grid; place-items: center; flex-shrink: 0; transition: transform .15s; }
+.compose .send.tap { animation: tap .5s ease-out; }
+.compose .send svg { width: 18px; height: 18px; fill: #fff; }
+
+@keyframes pop { from { opacity: 0; transform: translateY(6px) scale(.98); } to { opacity: 1; transform: none; } }
+@keyframes dot { 0%, 60%, 100% { opacity: .3; } 30% { opacity: 1; } }
+@keyframes tap { 0% { transform: scale(1); } 40% { transform: scale(.93); filter: brightness(.9); } 100% { transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) { .bub, .btnrow, .card, .sys { animation: none; } .typing i { animation: none; opacity: .7; } .msgs { scroll-behavior: auto; } }
+
+/* Painel */
+.panel { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.ctl { display: flex; gap: 8px; flex-wrap: wrap; }
+.ctl button { font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; border-radius: 8px; padding: 8px 16px; border: 1px solid var(--magenta); background: var(--magenta); color: #fff; }
+.ctl button.ghost { background: var(--surface); color: var(--magenta-ink); }
+.now { background: var(--surface); border: 1px solid var(--line); padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; min-height: 150px; }
+.now .k { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.now p { font-size: 15px; }
+.behind { background: var(--surface); border: 1px solid var(--line); padding: 14px 18px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.behind .k { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.behind pre { margin: 0; font-family: var(--mono); font-size: 12px; white-space: pre-wrap; word-break: break-all; color: var(--ink); }
+.steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; counter-reset: s; }
+.steps li { font-size: 13.5px; color: var(--muted); padding: 4px 0 4px 26px; position: relative; counter-increment: s; }
+.steps li::before { content: counter(s); position: absolute; left: 0; top: 5px; width: 18px; height: 18px; border-radius: 50%; border: 1px solid var(--line); font-size: 11px; display: grid; place-items: center; font-weight: 700; }
+.steps li.done { color: var(--ink); }
+.steps li.done::before { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+.steps li.cur { color: var(--ink); font-weight: 700; }
+.steps li.cur::before { background: var(--magenta); color: #fff; border-color: var(--magenta); }
+.pill { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 4px; }
+.pill.lead { background: var(--ok-soft); color: var(--ok); }
+.pill.nolead { background: var(--no-soft); color: var(--no); }
+.pill.wait { background: var(--amber-soft); color: var(--ink); }
+
+/* Notas abaixo */
+.notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+.notes > div { background: var(--surface); border: 1px solid var(--line); padding: 18px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.notes .k { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--magenta-ink); }
+.quote { border-left: 3px solid var(--magenta); padding: 6px 12px; background: var(--magenta-soft); font-size: 14px; }
+.paths { display: flex; flex-direction: column; gap: 14px; }
+.path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+.path { background: var(--surface); border: 1px solid var(--line); border-top: 3px solid var(--ok); padding: 18px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.path .k { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ok); }
+.path ol { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
+.track { font-size: 13.5px; background: var(--ok-soft); padding: 10px 12px; }
+.track.warn { background: var(--amber-soft); }
+.fix { font-size: 14px; border-left: 3px solid var(--magenta); background: var(--magenta-soft); padding: 12px 16px; }
+.tbl { overflow-x: auto; border: 1px solid var(--line); background: var(--surface); }
+.tbl table { border-collapse: collapse; width: 100%; min-width: 520px; font-size: 14px; }
+.tbl th, .tbl td { text-align: left; vertical-align: top; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+.tbl th { font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--no); background: var(--no-soft); }
+.tbl tr:last-child td { border-bottom: 0; }
+footer { font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; }
+
+@media (max-width: 820px) {
+  .stage { grid-template-columns: minmax(0, 1fr); justify-items: center; }
+  .panel { width: 100%; }
+  .screen { height: 580px; }
+}
+</style>
+
+<div class="wrap">
+  <header style="display:flex;flex-direction:column;gap:10px">
+    <div class="eyebrow">Mockup · como funcionaria na conversa</div>
+    <h1>Simulador CintIA</h1>
+    <p class="lede">Escolha um cenário e toque nos botões dentro do celular. Os números de telefone e o CNPJ são de exemplo.</p>
+  </header>
+
+  <div class="tabs" role="tablist" id="tabs"></div>
+
+  <div class="stage">
+    <div class="phone" aria-label="Simulação da conversa no WhatsApp">
+      <div class="screen">
+        <div class="head" id="head"></div>
+        <div class="msgs" id="msgs" aria-live="polite"></div>
+        <div class="compose"><div class="box empty" id="box">Mensagem</div><div class="send" id="send"><svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></div></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="ctl">
+        <button id="replay" type="button">Recomeçar</button>
+        <button id="skip" type="button" class="ghost">Pular pro fim</button>
+      </div>
+      <div class="now">
+        <span class="k" id="nowk">Passo</span>
+        <h3 id="nowt"></h3>
+        <p id="nowp"></p>
+      </div>
+      <div class="behind" id="behind" hidden>
+        <span class="k">Por trás</span>
+        <pre id="behindp"></pre>
+      </div>
+      <ol class="steps" id="steps"></ol>
+    </div>
+  </div>
+
+  <section class="notes">
+    <div>
+      <span class="k">O link do Rafa</span>
+      <h3>É um link de WhatsApp com a mensagem já escrita</h3>
+      <p>O formato é <code>wa.me/55NUMERO?text=…</code>. Quando a pessoa toca, o WhatsApp abre a conversa com o Rafa com o texto já na caixa de mensagem. Ela só aperta enviar. O WhatsApp nunca envia sozinho, então é a própria farmácia que puxa a conversa, e o Rafa recebe já sabendo o CNPJ e o que ela cotou.</p>
+      <p>Dá pra mandar como botão em vez de link solto: a API do WhatsApp tem botão que abre URL. Fica um botão "Falar com o Rafa", sem aquele link comprido na tela. O mesmo vale pro cadastro: um botão "Criar minha conta" com o UTM escondido.</p>
+    </div>
+    <div>
+      <span class="k">Cartão de contato</span>
+      <h3>Hoje ele chega junto com os botões. Melhor depois do clique</h3>
+      <p>Pelos testes do código, o cartão sai na mesma leva dos botões: texto, texto, botões, texto, cartão. Assim o pedido de salvar contato compete com o convite do cadastro, e o botão deixa de ser a última coisa na tela.</p>
+      <p>Proposta: o cartão vem logo depois da resposta ao clique, antes de a pessoa sair pro cadastro ou pro Rafa. Se ela não clicar e mandar outro produto, o cartão vem no fim da 2ª cotação. E vem com um motivo:</p>
+      <div class="quote">Me salva aqui como CintIA 💜 Sempre que precisar de preço, é só me mandar o nome do produto. Te respondo na hora, com todas as distribuidoras.</div>
+    </div>
+  </section>
+
+  <section class="paths">
+    <div class="eyebrow">Quando o lead vai pra vendas</div>
+    <h2>Três caminhos viram MQL. O resto fica com a CintIA</h2>
+    <p class="muted">Vale só pra farmácia de SP que ainda não é cliente. Antes de qualquer caminho, a CintIA já tem o CNPJ: ou porque a pessoa mandou pra ver a cotação, ou porque ela pediu "CNPJ ou nome da farmácia" antes de passar.</p>
+
+    <div class="path-grid">
+      <div class="path go">
+        <span class="k">Caminho 1 · MQL</span>
+        <h3>Quero o link → cadastro</h3>
+        <ol>
+          <li>Toca em <b>Quero o link</b>.</li>
+          <li>Faz o cadastro pelo link com UTM.</li>
+          <li>A API Lead cria o card no CRM.</li>
+        </ol>
+        <div class="track warn"><b>Rastreio a confirmar com o tech:</b> o clique fica no log da CintIA. Já a API Lead não conhece a CintIA. Ela leva pro CRM só a origem e a campanha do lead, sem a UTM completa. Se a farmácia já era lead antes, fica valendo a origem antiga, e a CintIA some.</div>
+      </div>
+      <div class="path go">
+        <span class="k">Caminho 2 · MQL</span>
+        <h3>Prefiro ajuda → Rafa</h3>
+        <ol>
+          <li>Toca em <b>Prefiro ajuda</b>, ou pede pessoa, ou trava em áudio e foto e aceita ajuda.</li>
+          <li>Recebe o link e abre a conversa com o Rafa, com o texto pronto.</li>
+          <li>O Rafa atende e cria o card no CRM.</li>
+        </ol>
+        <div class="track warn"><b>Rastreio:</b> o clique fica no log da CintIA. Já o envio da mensagem pro Rafa não dá pra ver, porque acontece em outra conversa. E o card depende de o Rafa criar.</div>
+      </div>
+      <div class="path go">
+        <span class="k">Caminho 3 · MQL</span>
+        <h3>Voltou pra cotar → oferta de pessoa</h3>
+        <ol>
+          <li>Na 1ª vez só cotou, sem tocar em nenhum botão. Recebe o cartão de contato com motivo pra salvar.</li>
+          <li>Volta sozinha e cota de novo. Na 2ª cotação sem cadastro, a CintIA oferece uma pessoa, uma vez.</li>
+          <li>Se aceitar, recebe o link do Rafa, igual ao caminho 2.</li>
+        </ol>
+        <div class="track"><b>Por que assim:</b> a [Empresa] não pode mandar mensagem primeiro. O único resgate é ela voltar, e quem traz ela de volta é o contato salvo e o hábito de cotar.</div>
+      </div>
+    </div>
+
+    <div class="fix"><b>Proposta pros caminhos 2 e 3:</b> no clique pra falar com o Rafa, a própria CintIA cria o card no CRM, já com CNPJ, farmácia e produtos cotados. Assim o lead não depende de o vendedor lembrar de criar, e dá pra medir quantos cliques viraram conversa com o Rafa.</div>
+
+    <div class="tbl">
+      <table>
+        <thead><tr><th>Não vai pra vendas</th><th>Por quê</th></tr></thead>
+        <tbody>
+          <tr><td>Recusou a oferta de pessoa e segue cotando</td><td>Ela só quer preço. Fica como MQL em hábito, e o convite pro cadastro volta a cada ~3 cotações.</td></tr>
+          <tr><td>Já é cliente ativo</td><td>Já faz isso pela plataforma.</td></tr>
+          <tr><td>Não é farmácia ou é de fora de SP</td><td>Não é público da [Empresa] hoje.</td></tr>
+          <tr><td>Recusou o CNPJ duas vezes</td><td>Sem CNPJ não dá pra saber se é farmácia.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>Mockup ilustrativo. Os textos da CintIA seguem os prompts que estão no ar no hub de agentes, exceto os marcados como proposta no painel. Telefone do Rafa e CNPJ são fictícios.</footer>
+</div>
+
+<script>
+(function () {
+  const SELLER_PHONE = '5511900000000';
+  const CNPJ = '11.222.333/0001-81';
+  const UTM = 'https://empresa.example/cadastro?utm_source=cintia&utm_medium=whatsapp&utm_campaign=cintia-botao-link';
+  const UTM_HELP = 'https://empresa.example/cadastro?utm_source=cintia&utm_medium=whatsapp&utm_campaign=cintia-ajuda';
+  const wa = (txt) => 'https://wa.me/' + SELLER_PHONE + '?text=' + encodeURIComponent(txt);
+
+  const MSG_SELLER_QUOTE = 'Oi Rafa! Vim da CintIA 🙂 Quero ajuda pra criar minha conta. CNPJ ' + CNPJ + ' (Drogaria X, Osasco). Cotei Dipirona 500mg hoje.';
+  const MSG_SELLER_HELP = 'Oi Rafa! Vim da CintIA 🙂 Tentei cotar pelo WhatsApp e preciso de ajuda. CNPJ ' + CNPJ + ' (Drogaria X, Osasco).';
+
+  const CARD_TXT = 'Me salva aqui como *CintIA* 💜 Sempre que precisar de preço, é só me mandar o nome do produto. Te respondo na hora, com todas as distribuidoras.';
+
+  const quote = [
+    { who: 'in', text: 'dipirona 500mg' },
+    { who: 'bot', text: 'Encontrei! *Dipirona Sódica 500mg 20cp*\n\n📦 6 distribuidoras têm hoje\n💰 Os preços vão de R$ 1,21 a R$ 2,34' },
+    { who: 'bot', text: 'Pra te mostrar qual tá com o menor preço, preciso do *CNPJ da sua farmácia* 🙂\n\n_CNPJ é dado público. Uso só pra confirmar que é farmácia._' },
+    { who: 'in', text: CNPJ, step: 'cnpj' },
+    { who: 'bot', text: '✅ CNPJ confirmado, achei você!' },
+    { who: 'bot', text: '*Dipirona 500mg 20cp* hoje:\n\n*Distribuidora D — R$ 1,21*\nDistribuidora A — R$ 1,45\nDistribuidora F — R$ 1,60\nDistribuidora C — R$ 1,88\nDistribuidora B — R$ 2,34\n\n💰 Média: R$ 1,70 · variação de hoje: 93%', step: 'quote' },
+    { who: 'bot', text: 'Ah, importante: esses são os *preços de referência* de hoje 🙂\n\nPra ver o preço exato da sua farmácia, precisa ter cadastro na plataforma. É gratuito.' },
+    { who: 'bot', text: 'Quer fazer agora? Te mando o link.\nSe preferir ajuda, o *Rafa* do nosso time faz junto com você.\n\nE se quiser só cotar, é só ir mandando os produtos 👋', step: 'm5' },
+  ];
+
+  const SCEN = {
+    pos: {
+      tab: 'Pós-cotação', sub: 'Quero o link ou Prefiro ajuda',
+      steps: ['Cotação entregue', 'Convite com dois botões', 'Resposta ao botão', 'Cartão de contato com motivo', 'Sai da CintIA'],
+      events: [
+        ...quote,
+        { who: 'buttons', options: [{ id: 'link', label: 'Quero o link' }, { id: 'help', label: 'Prefiro ajuda' }], auto: 'help' }
+      ],
+      branches: {
+        link: [
+          { who: 'out', text: 'Quero o link', step: 'pick' },
+          { who: 'bot', text: 'Opa! Tá aqui 👇\n{LINK}\n\nQualquer dúvida no meio do caminho é só me chamar 🙂', link: UTM, step: 'linkSent' },
+          { who: 'card', step: 'card' },
+          { who: 'sys', text: 'A pessoa toca no link → abre o cadastro no navegador, com o UTM gravado', step: 'leave' },
+        ],
+        help: [
+          { who: 'out', text: 'Prefiro ajuda', step: 'pick' },
+          { who: 'bot', text: 'Opa, já te conecto com o Rafa 👋 Ele faz o cadastro junto com você.\n{LINK}\n\nEle já vai receber seu CNPJ e o que você cotou, então não precisa contar tudo de novo 🙂', link: wa(MSG_SELLER_QUOTE), linkLabel: 'Falar com o Rafa', step: 'sellerSent' },
+          { who: 'card', step: 'card' },
+          { who: 'tapLink' },
+          { who: 'switch', to: 'seller', prefill: MSG_SELLER_QUOTE, step: 'leave' },
+          { who: 'sendPrefill' },
+          { who: 'sys', text: 'O Rafa recebe a mensagem e responde. A farmácia já chega com contexto.' },
+        ]
+      }
+    },
+    dif: {
+      tab: 'Travou sem CNPJ', sub: 'áudio, foto, pediu pessoa',
+      steps: ['1ª limitação: áudio', '2ª limitação: foto', 'CintIA oferece ajuda', 'Pede CNPJ ou nome', 'Checa: farmácia SP, não cliente', 'Link do Rafa + cartão'],
+      events: [
+        { who: 'in', text: '🎤 Áudio · 0:14', media: true },
+        { who: 'bot', text: 'Ixi, eu ainda não escuto áudio 😅 Consegue mandar escrito?', step: 'lim1' },
+        { who: 'in', text: '📷 Foto', media: true },
+        { who: 'bot', text: 'Ixi, ler foto de falteiro eu ainda não sei fazer 😅 Tô aprendendo ainda.', step: 'lim2' },
+        { who: 'bot', text: 'Se preferir, eu te passo pra alguém do time que te ajuda com essa lista. Quer?', step: 'offer', proposal: true },
+        { who: 'buttons', options: [{ id: 'yes', label: 'Quero ajuda' }, { id: 'no', label: 'Vou escrever' }], auto: 'yes' }
+      ],
+      branches: {
+        yes: [
+          { who: 'out', text: 'Quero ajuda' },
+          { who: 'bot', text: 'Opa! Pra eu te passar pra pessoa certa, me manda o *CNPJ* ou o *nome da sua farmácia*? 🙂', step: 'ask', proposal: true },
+          { who: 'in', text: 'drogaria x osasco' },
+          { who: 'bot', text: 'Achei! É a *DROGARIA X*, de Osasco, CNPJ ' + CNPJ + '?', proposal: true },
+          { who: 'in', text: 'isso', step: 'check' },
+          { who: 'bot', text: 'Pronto! O Rafa do nosso time te ajuda com a lista 👇\n{LINK}\n\nEle já recebe o CNPJ da farmácia, não precisa repetir 🙂', link: wa(MSG_SELLER_HELP), linkLabel: 'Falar com o Rafa', step: 'sellerSent', proposal: true },
+          { who: 'card' },
+          { who: 'tapLink' },
+          { who: 'switch', to: 'seller', prefill: MSG_SELLER_HELP },
+          { who: 'sendPrefill' },
+          { who: 'sys', text: 'Lead novo pro vendedor: farmácia SP, sem cadastro, com intenção (mandou o falteiro).' },
+        ],
+        no: [
+          { who: 'out', text: 'Vou escrever' },
+          { who: 'bot', text: 'Pode deixar! Me manda o nome do primeiro produto que eu coto na hora 💊' },
+          { who: 'sys', text: 'Sem passagem. Segue a jornada normal de cotação.' },
+        ]
+      }
+    },
+    vol: {
+      tab: 'Voltou pra cotar', sub: 'não clicou na 1ª vez',
+      steps: ['1ª vez: só cotou', 'Volta e cota de novo', 'CintIA oferece uma pessoa', 'Link do Rafa + card no CRM'],
+      events: [
+        { who: 'sys', text: 'Ontem: cotou dipirona, não tocou em nenhum botão e recebeu o cartão de contato.', step: 'prev' },
+        { who: 'sys', text: 'Hoje, ela mesma chama a CintIA (pelo contato salvo).' },
+        { who: 'in', text: 'losartana 50mg' },
+        { who: 'bot', text: 'E aí, *DROGARIA X*! 👋\n\n*Losartana Potássica 50mg 30cp* hoje:\n\n*Distribuidora A — R$ 4,10*\nDistribuidora D — R$ 4,55\nDistribuidora C — R$ 5,20\n\n💰 Média: R$ 4,62 · variação de hoje: 27%', step: 'quote2' },
+        { who: 'bot', text: 'Já é sua segunda cotação comigo 🙂\n\nSe quiser, alguém do time te mostra como ficam esses preços com as condições da sua farmácia. Leva uns minutinhos.', step: 'offer3', proposal: true },
+        { who: 'buttons', options: [{ id: 'yes', label: 'Quero, me chama' }, { id: 'no', label: 'Só cotar' }], auto: 'yes' }
+      ],
+      branches: {
+        yes: [
+          { who: 'out', text: 'Quero, me chama' },
+          { who: 'bot', text: 'Opa! O Rafa te ajuda 👇\n{LINK}\n\nEle já recebe o CNPJ e o que você cotou, não precisa repetir 🙂', link: wa('Oi Rafa! Vim da CintIA 🙂 Quero ver como ficam os preços pra minha farmácia. CNPJ ' + CNPJ + ' (Drogaria X, Osasco). Cotei Dipirona 500mg e Losartana 50mg.'), step: 'sellerSent', proposal: true },
+          { who: 'tapLink' },
+          { who: 'switch', to: 'seller', prefill: 'Oi Rafa! Vim da CintIA 🙂 Quero ver como ficam os preços pra minha farmácia. CNPJ ' + CNPJ + ' (Drogaria X, Osasco). Cotei Dipirona 500mg e Losartana 50mg.' },
+          { who: 'sendPrefill' },
+          { who: 'sys', text: 'No clique, a CintIA já criou o card no CRM, com os dois produtos cotados.' },
+        ],
+        no: [
+          { who: 'out', text: 'Só cotar' },
+          { who: 'bot', text: 'Pode deixar! Sempre que precisar de preço, me manda o produto 💊', step: 'no' },
+          { who: 'sys', text: 'Sem passagem. A oferta só volta depois de mais algumas cotações.' },
+        ]
+      }
+    },
+    cli: {
+      tab: 'Já é cliente', sub: 'pediu pessoa',
+      steps: ['Pediu pessoa', 'Pede CNPJ', 'Checa: já é cliente ativo', 'Não vai pra vendas'],
+      events: [
+        { who: 'in', text: 'quero falar com alguém' },
+        { who: 'bot', text: 'Claro! Pra eu te passar pra pessoa certa, me manda o *CNPJ* ou o *nome da sua farmácia*? 🙂', step: 'ask', proposal: true },
+        { who: 'in', text: '44.555.666/0001-20', step: 'check' },
+        { who: 'bot', text: 'Achei! A *FARMÁCIA Y* já tem conta na plataforma 💜', proposal: true },
+        { who: 'bot', text: 'Lá na plataforma você já vê o preço com as condições da sua farmácia.\n\nSe for dúvida de pedido ou de uso, o suporte te atende por lá, no chat do app. E se quiser só um preço rápido, me manda o produto aqui 💊', step: 'end', proposal: true },
+        { who: 'sys', text: 'Não vira card de vendas. Fica registrado como "cliente ativo pediu pessoa".' },
+      ],
+      branches: {}
+    }
+  };
+
+  const BEHIND = {
+    cnpj: 'validate_cnpj → rota A (farmácia, SP)\nnasce o MQL aqui, antes da cotação',
+    quote: 'search_products → todas as distribuidoras\nordenadas do menor pro maior preço',
+    m5: 'o sistema anexa a nota + os 2 botões\n(o LLM não escreve isso)',
+    linkSent: 'link com UTM:\n' + UTM + '\n\nno cadastro vira: origin = cintia · campaign = cintia-botao-link',
+    sellerSent: 'wa.me com texto codificado:\n' + wa(MSG_SELLER_QUOTE),
+    card: 'mensagem do tipo "contacts" (vCard da CintIA)\nproposta: vir depois do clique, com motivo',
+    lim1: 'contador de limitações = 1',
+    lim2: 'contador de limitações = 2 → dispara a oferta de ajuda',
+    offer: 'proposta: oferecer pessoa na 2ª limitação seguida',
+    ask: 'sem CNPJ salvo → pede CNPJ ou nome da farmácia\n(uma vez; se recusar, passa pro atendimento geral)',
+    check: 'check_client_status(cnpj)\n→ é farmácia? é SP? tem conta? pediu nos últimos 90 dias? card aberto no CRM?',
+    end: 'cliente ativo → não cria card de vendas',
+    prev: 'contador de cotações deste telefone = 1\ncliques = 0 · cartão de contato enviado',
+    quote2: 'contador de cotações = 2 · sem cadastro (cruzando o CNPJ)\n→ dispara a oferta, uma vez',
+    offer3: 'proposta: oferta de pessoa na 2ª cotação sem cadastro\nsó passa quem aceitar',
+    no: 'recusou a oferta → não oferece de novo nas próximas cotações',
+  };
+
+  const CAPTION = {
+    pos: {
+      cnpj: ['CNPJ validado', 'Rota A: farmácia de SP. É aqui que o lead nasce, antes de a cotação sair.', 'lead'],
+      quote: ['Cotação entregue', 'Todas as distribuidoras que têm o item, da mais barata pra mais cara.', 'lead'],
+      m5: ['Convite com dois botões', 'A última bolha traz os botões. A terceira saída, só seguir cotando, fica sem botão de propósito.', 'lead'],
+      linkSent: ['Link do cadastro com UTM', 'Ela vai sozinha. O UTM faz o cadastro aparecer como vindo da CintIA. Sem vendedor no meio.', 'lead'],
+      sellerSent: ['Link do Rafa', 'Um link de WhatsApp com a mensagem já escrita: CNPJ, nome da farmácia e o produto cotado.', 'lead'],
+      card: ['Cartão de contato, com motivo', 'Proposta: o cartão vem depois do clique e diz por que salvar. É o único jeito de ela voltar sem mídia paga.', 'wait'],
+      leave: ['Ela sai da CintIA', 'Com o link do Rafa, o WhatsApp abre outra conversa com o texto pronto na caixa. Ela só aperta enviar.', 'lead'],
+    },
+    dif: {
+      lim1: ['1ª limitação', 'Áudio. A CintIA pede pra escrever, como faz hoje.', 'wait'],
+      lim2: ['2ª limitação seguida', 'Foto do falteiro. Quem manda a lista de compras tem intenção alta.', 'wait'],
+      offer: ['CintIA oferece ajuda', 'Proposta: em vez de só dizer "não sei fazer", ela abre um caminho pra uma pessoa.', 'wait'],
+      ask: ['Pede o CNPJ ou o nome', 'Sem isso não dá pra saber se é farmácia, se é de SP e se já é cliente.', 'wait'],
+      check: ['Checagem', 'Farmácia de SP, sem conta na [Empresa]. Pode ir pro vendedor.', 'lead'],
+      sellerSent: ['Link do Rafa', 'Mesmo mecanismo do "Prefiro ajuda", com outra mensagem pronta.', 'lead'],
+    },
+    vol: {
+      prev: ['Ela não clicou na 1ª vez', 'Cotou, não tocou em nada e foi embora. A [Empresa] não pode mandar mensagem pra ela, então o único resgate é ela voltar sozinha, pelo contato salvo.', 'wait'],
+      quote2: ['Voltou e cotou de novo', 'Sem pedir CNPJ: ele ficou salvo. Duas cotações já mostram que ela usa de verdade.', 'wait'],
+      offer3: ['CintIA oferece uma pessoa', 'Proposta: na 2ª cotação sem cadastro, a CintIA oferece ajuda uma vez. Só passa quem aceitar.', 'wait'],
+      sellerSent: ['Link do Rafa', 'Mesmo mecanismo do "Prefiro ajuda". No clique, a CintIA cria o card no CRM com os produtos cotados.', 'lead'],
+      no: ['Escolheu só cotar', 'Tudo bem: ela segue usando, e o hábito é o que traz ela de volta.', 'wait'],
+    },
+    cli: {
+      ask: ['Pediu pessoa', 'Antes de passar, a CintIA pede o CNPJ ou o nome da farmácia.', 'wait'],
+      check: ['Checagem', 'A farmácia já é cliente ativa: tem conta e fez pedido nos últimos 90 dias.', 'nolead'],
+      end: ['Não vai pra vendas', 'Ela já faz isso pela plataforma. A CintIA lembra disso e deixa a porta aberta pra cotar.', 'nolead'],
+    }
+  };
+  const PILL = { lead: ['lead', 'vai pro vendedor / é lead'], wait: ['wait', 'ainda decidindo'], nolead: ['nolead', 'não vai pra vendas'] };
+  const PILL_TXT = { lead: 'lead', wait: 'em andamento', nolead: 'não vai pra vendas' };
+
+  const $ = (id) => document.getElementById(id);
+  const msgs = $('msgs'), head = $('head'), box = $('box'), send = $('send');
+  let cur = 'pos', timers = [], runId = 0, fast = false, stepIdx = 0;
+
+  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const now = () => { const d = new Date(); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); };
+
+  function fmt(t) {
+    const esc = t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return esc.replace(/\*([^*]+)\*/g, '<b>$1</b>').replace(/_([^_]+)_/g, '<i>$1</i>').replace(/\n/g, '<br>');
+  }
+
+  function setHead(who) {
+    if (who === 'seller') {
+      head.innerHTML = '<div class="avatar seller">R</div><div class="who"><b>Rafa · time comercial</b><span>vendedor · exemplo</span></div>';
+    } else {
+      head.innerHTML = '<div class="avatar cintia">C</div><div class="who"><b>CintIA</b><span>conta comercial</span></div>';
+    }
+  }
+
+  function scroll() { msgs.scrollTop = msgs.scrollHeight; }
+
+  function addBubble(ev) {
+    const d = document.createElement('div');
+    if (ev.who === 'sys') { d.className = 'sys'; d.textContent = ev.text; msgs.appendChild(d); scroll(); return; }
+    const side = ev.who === 'bot' ? 'in' : 'out';
+    d.className = 'bub ' + side + (ev.media ? ' media' : '');
+    let html = fmt(ev.text);
+    if (ev.link) {
+      html = html.replace('{LINK}', '<a class="wa-link" href="' + ev.link + '" target="_blank" rel="noopener" data-sim="1">' + ev.link.replace(/&/g, '&amp;') + '</a>');
+    }
+    d.innerHTML = html + '<span class="t">' + now() + (side === 'out' ? ' ✓✓' : '') + '</span>';
+    d.querySelectorAll('a[data-sim]').forEach(a => a.addEventListener('click', e => e.preventDefault()));
+    msgs.appendChild(d); scroll();
+  }
+
+  function addCard() {
+    addBubble({ who: 'bot', text: CARD_TXT });
+    const c = document.createElement('div');
+    c.className = 'card';
+    c.innerHTML = '<div class="top"><div class="avatar cintia">C</div><div><b>CintIA</b><span>Contato</span></div></div><div class="add">Adicionar aos contatos</div>';
+    msgs.appendChild(c); scroll();
+  }
+
+  function typing(ms, cb) {
+    const t = document.createElement('div');
+    t.className = 'typing'; t.innerHTML = '<i></i><i></i><i></i>';
+    msgs.appendChild(t); scroll();
+    later(ms, () => { t.remove(); cb(); });
+  }
+
+  function later(ms, fn) {
+    const id = runId;
+    if (fast) { fn(); return; }
+    timers.push(setTimeout(() => { if (id === runId) fn(); }, ms));
+  }
+
+  function clearAll() { timers.forEach(clearTimeout); timers = []; runId++; }
+
+  function setCaption(key) {
+    const c = CAPTION[cur][key];
+    if (c) {
+      $('nowk').innerHTML = 'Agora · <span class="pill ' + c[2] + '">' + PILL_TXT[c[2]] + '</span>';
+      $('nowt').textContent = c[0];
+      $('nowp').textContent = c[1];
+      const lis = $('steps').children;
+      const idx = Object.keys(CAPTION[cur]).indexOf(key);
+      stepIdx = Math.max(stepIdx, idx);
+    }
+    if (BEHIND[key]) { $('behind').hidden = false; $('behindp').textContent = BEHIND[key]; }
+    markSteps();
+  }
+
+  function markSteps() {
+    const lis = [...$('steps').children];
+    const keys = Object.keys(CAPTION[cur]);
+    const total = lis.length;
+    const ratio = keys.length > 1 ? stepIdx / (keys.length - 1) : 1;
+    const curLi = Math.min(total - 1, Math.round(ratio * (total - 1)));
+    lis.forEach((li, i) => { li.className = i < curLi ? 'done' : i === curLi ? 'cur' : ''; });
+  }
+
+  function play(list, i, done) {
+    if (i >= list.length) { done && done(); return; }
+    const ev = list[i];
+    const next = (ms) => later(ms, () => play(list, i + 1, done));
+    if (ev.step) setCaption(ev.step);
+    if (ev.who === 'bot') {
+      typing(reduce ? 300 : 900, () => { addBubble(ev); next(650); });
+    } else if (ev.who === 'in' || ev.who === 'out') {
+      // mensagens da farmácia saem do lado direito; respostas de botão também
+      addBubble({ ...ev, who: 'out' }); next(900);
+    } else if (ev.who === 'sys') {
+      addBubble(ev); next(900);
+    } else if (ev.who === 'card') {
+      typing(reduce ? 300 : 700, () => { addCard(); if (ev.step) setCaption(ev.step); next(1300); });
+    } else if (ev.who === 'buttons') {
+      renderButtons(ev);
+    } else if (ev.who === 'tapLink') {
+      const links = msgs.querySelectorAll('.wa-link');
+      const l = links[links.length - 1];
+      if (l) { l.style.background = 'rgba(11,107,203,.18)'; }
+      next(1100);
+    } else if (ev.who === 'switch') {
+      later(200, () => {
+        msgs.innerHTML = '';
+        setHead(ev.to);
+        const day = document.createElement('div'); day.className = 'day'; day.textContent = 'Nova conversa'; msgs.appendChild(day);
+        box.textContent = ev.prefill; box.className = 'box filled';
+        if (ev.step) setCaption(ev.step);
+        next(2200);
+      });
+    } else if (ev.who === 'sendPrefill') {
+      send.classList.remove('tap'); void send.offsetWidth; send.classList.add('tap');
+      const t = box.textContent;
+      box.textContent = 'Mensagem'; box.className = 'box empty';
+      addBubble({ who: 'out', text: t });
+      next(1000);
+    } else {
+      next(0);
+    }
+  }
+
+  function renderButtons(ev) {
+    const row = document.createElement('div');
+    row.className = 'btnrow';
+    ev.options.forEach(o => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'wa-btn'; b.textContent = o.label; b.dataset.id = o.id;
+      b.addEventListener('click', () => choose(o.id, row));
+      row.appendChild(b);
+    });
+    msgs.appendChild(row); scroll();
+    $('nowp').textContent += ' Toque num botão dentro do celular.';
+    if (fast) choose(ev.auto, row);
+  }
+
+  function choose(id, row) {
+    if (row.dataset.used) return;
+    row.dataset.used = '1';
+    row.querySelectorAll('button').forEach(b => { b.disabled = true; if (b.dataset.id === id) { b.classList.add('chosen', 'tap'); } });
+    const list = SCEN[cur].branches[id] || [];
+    later(500, () => play(list, 0));
+  }
+
+  function start(key, toEnd) {
+    clearAll();
+    cur = key; fast = !!toEnd; stepIdx = 0;
+    msgs.innerHTML = '';
+    box.textContent = 'Mensagem'; box.className = 'box empty';
+    setHead('cintia');
+    const day = document.createElement('div'); day.className = 'day'; day.textContent = 'Hoje'; msgs.appendChild(day);
+    $('behind').hidden = true;
+    $('nowk').textContent = 'Começando';
+    $('nowt').textContent = SCEN[key].tab;
+    $('nowp').textContent = '';
+    $('steps').innerHTML = SCEN[key].steps.map(s => '<li>' + s + '</li>').join('');
+    [...$('tabs').children].forEach(b => b.setAttribute('aria-selected', String(b.dataset.k === key)));
+    try { localStorage.setItem('cintia-sim-tab', key); } catch (e) {}
+    const first = SCEN[key].events;
+    if (key !== 'pos' && first[0].who === 'in') { /* sem saudação */ }
+    play(first, 0, () => {});
+    if (fast) { fast = false; scroll(); }
+  }
+
+  // abas
+  Object.entries(SCEN).forEach(([k, s]) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.role = 'tab'; b.dataset.k = k;
+    b.innerHTML = s.tab + '<small>' + s.sub + '</small>';
+    b.addEventListener('click', () => start(k));
+    $('tabs').appendChild(b);
+  });
+  $('replay').addEventListener('click', () => start(cur));
+  $('skip').addEventListener('click', () => start(cur, true));
+
+  let initial = 'pos';
+  try { const s = localStorage.getItem('cintia-sim-tab'); if (s && SCEN[s]) initial = s; } catch (e) {}
+  if (location.hash && SCEN[location.hash.slice(1)]) initial = location.hash.slice(1);
+  start(initial);
+})();
+</script>

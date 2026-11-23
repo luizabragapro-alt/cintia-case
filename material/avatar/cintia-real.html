@@ -1,0 +1,271 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>CintIA — retrato</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1024px;height:1024px;overflow:hidden}
+  svg{display:block;width:1024px;height:1024px}
+
+  .pele-clara  { --luz:#F3CCA8; --base:#DFAC83; --sombra:#BE8A60; --fundoPele:#9E6C47;
+                 --labio:#B4655C; --labioLuz:#CF8C82; --blush:#D08A72 }
+  .pele-media  { --luz:#DFAA7E; --base:#C68E60; --sombra:#A26E45; --fundoPele:#7F5433;
+                 --labio:#9E544B; --labioLuz:#BC7568; --blush:#B06C50 }
+  .pele-escura { --luz:#B07846; --base:#915E34; --sombra:#734626; --fundoPele:#56331A;
+                 --labio:#733830; --labioLuz:#91544A; --blush:#8A4D2E }
+  .pele-retinta{ --luz:#8A5831; --base:#6C4324; --sombra:#513019; --fundoPele:#3B2211;
+                 --labio:#5A2A23; --labioLuz:#78423A; --blush:#6B3A1D }
+
+  .cab-preto   { --h1:#120C08; --h2:#211710; --h3:#3A2819; --h4:#5E4529 }
+  .cab-castanho{ --h1:#27180E; --h2:#3B2514; --h3:#5C3A20; --h4:#8A5F36 }
+
+  .fundo-magenta{ --bg1:#E451CE; --bg2:#C229A8; --roupa:#FFFFFF }
+  .fundo-claro  { --bg1:#FBD6F2; --bg2:#F0A9E0; --roupa:#2F2F32 }
+  .fundo-escuro { --bg1:#3C3C42; --bg2:#212125; --roupa:#FFFFFF }
+</style>
+<body>
+<svg viewBox="110 60 380 380" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <radialGradient id="gFundo" cx="50%" cy="36%" r="80%">
+    <stop offset="0%" stop-color="var(--bg1)"/>
+    <stop offset="100%" stop-color="var(--bg2)"/>
+  </radialGradient>
+
+  <radialGradient id="gPele" cx="46%" cy="32%" r="70%">
+    <stop offset="0%" stop-color="var(--luz)"/>
+    <stop offset="52%" stop-color="var(--base)"/>
+    <stop offset="100%" stop-color="var(--sombra)"/>
+  </radialGradient>
+
+  <linearGradient id="gPescoco" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="var(--fundoPele)"/>
+    <stop offset="55%" stop-color="var(--sombra)"/>
+    <stop offset="100%" stop-color="var(--base)"/>
+  </linearGradient>
+
+  <linearGradient id="gCabelo" x1="0.15" y1="0" x2="0.85" y2="1">
+    <stop offset="0%" stop-color="var(--h3)"/>
+    <stop offset="38%" stop-color="var(--h2)"/>
+    <stop offset="100%" stop-color="var(--h1)"/>
+  </linearGradient>
+
+  <radialGradient id="gIris" cx="50%" cy="40%" r="58%">
+    <stop offset="0%" stop-color="#8E5E34"/>
+    <stop offset="52%" stop-color="#4E2F17"/>
+    <stop offset="100%" stop-color="#221307"/>
+  </radialGradient>
+
+  <linearGradient id="gLabioInf" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="var(--labio)"/>
+    <stop offset="50%" stop-color="var(--labioLuz)"/>
+    <stop offset="100%" stop-color="var(--labio)"/>
+  </linearGradient>
+
+  <filter id="b3" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="3"/></filter>
+  <filter id="b6" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="6"/></filter>
+  <filter id="b12" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="12"/></filter>
+  <filter id="b20" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="20"/></filter>
+
+  <clipPath id="clipRosto">
+    <path d="M300,120 C243,120 199,166 195,245 C193,288 200,320 214,348 C228,376 262,402 300,402 C338,402 372,376 386,348 C400,320 407,288 405,245 C401,166 357,120 300,120 Z"/>
+  </clipPath>
+
+  <clipPath id="clipCabTras"></clipPath>
+  <clipPath id="clipCabFrente"></clipPath>
+</defs>
+
+<rect x="0" y="0" width="600" height="600" fill="url(#gFundo)"/>
+
+<!-- cabelo de tras: massa unica com um so gradiente -->
+<g clip-path="url(#clipCabTras)">
+  <rect x="0" y="0" width="600" height="600" fill="url(#gCabelo)"/>
+  <g id="brilho-tras"></g>
+</g>
+
+<!-- pescoco e ombro -->
+<path d="M262,350 L338,350 L356,470 L244,470 Z" fill="url(#gPescoco)"/>
+<path d="M140,600 C146,486 212,440 300,434 C388,440 454,486 460,600 Z" fill="var(--roupa)"/>
+<ellipse cx="300" cy="382" rx="60" ry="28" fill="var(--fundoPele)" opacity=".5" filter="url(#b12)"/>
+
+<!-- orelhas -->
+<g>
+  <ellipse cx="197" cy="300" rx="13" ry="27" fill="var(--base)"/>
+  <ellipse cx="403" cy="300" rx="13" ry="27" fill="var(--base)"/>
+  <ellipse cx="198" cy="302" rx="6" ry="14" fill="var(--sombra)" opacity=".65" filter="url(#b3)"/>
+  <ellipse cx="402" cy="302" rx="6" ry="14" fill="var(--sombra)" opacity=".65" filter="url(#b3)"/>
+</g>
+
+<!-- rosto -->
+<path d="M300,120 C243,120 199,166 195,245 C193,288 200,320 214,348 C228,376 262,402 300,402 C338,402 372,376 386,348 C400,320 407,288 405,245 C401,166 357,120 300,120 Z" fill="url(#gPele)"/>
+
+<g clip-path="url(#clipRosto)">
+  <ellipse cx="184" cy="266" rx="38" ry="108" fill="var(--sombra)" opacity=".5" filter="url(#b20)"/>
+  <ellipse cx="416" cy="266" rx="38" ry="108" fill="var(--sombra)" opacity=".5" filter="url(#b20)"/>
+  <ellipse cx="300" cy="398" rx="82" ry="30" fill="var(--sombra)" opacity=".34" filter="url(#b20)"/>
+  <ellipse cx="300" cy="202" rx="72" ry="40" fill="var(--luz)" opacity=".45" filter="url(#b20)"/>
+  <ellipse cx="248" cy="298" rx="38" ry="24" fill="var(--luz)" opacity=".32" filter="url(#b12)"/>
+  <ellipse cx="352" cy="298" rx="38" ry="24" fill="var(--luz)" opacity=".32" filter="url(#b12)"/>
+  <ellipse cx="244" cy="308" rx="36" ry="20" fill="var(--blush)" opacity=".28" filter="url(#b12)"/>
+  <ellipse cx="356" cy="308" rx="36" ry="20" fill="var(--blush)" opacity=".28" filter="url(#b12)"/>
+  <ellipse cx="259" cy="255" rx="34" ry="16" fill="var(--sombra)" opacity=".3" filter="url(#b6)"/>
+  <ellipse cx="341" cy="255" rx="34" ry="16" fill="var(--sombra)" opacity=".3" filter="url(#b6)"/>
+</g>
+
+<!-- nariz -->
+<g transform="translate(0,-10)">
+  <path d="M289,264 C286,294 281,318 275,332 C282,340 293,344 300,344 C307,344 318,340 325,332 C319,318 314,294 311,264 Z" fill="var(--luz)" opacity=".28" filter="url(#b12)"/>
+  <ellipse cx="284" cy="330" rx="19" ry="14" fill="var(--sombra)" opacity=".44" filter="url(#b6)"/>
+  <ellipse cx="316" cy="330" rx="19" ry="14" fill="var(--sombra)" opacity=".44" filter="url(#b6)"/>
+  <ellipse cx="300" cy="344" rx="23" ry="8" fill="var(--fundoPele)" opacity=".4" filter="url(#b6)"/>
+  <path d="M300,306 C299,318 297,327 295,333" stroke="var(--luz)" stroke-width="7" fill="none" stroke-linecap="round" opacity=".3" filter="url(#b6)"/>
+  <ellipse cx="285" cy="337" rx="6.2" ry="4" fill="var(--fundoPele)" opacity=".8" transform="rotate(-18 285 337)"/>
+  <ellipse cx="315" cy="337" rx="6.2" ry="4" fill="var(--fundoPele)" opacity=".8" transform="rotate(18 315 337)"/>
+  <path d="M275,332 C279,340 288,344 296,343" stroke="var(--sombra)" stroke-width="3" fill="none" stroke-linecap="round" opacity=".55"/>
+  <path d="M325,332 C321,340 312,344 304,343" stroke="var(--sombra)" stroke-width="3" fill="none" stroke-linecap="round" opacity=".55"/>
+</g>
+
+<!-- sobrancelhas: forma macia + fios por cima -->
+<g id="sobrancelhas"></g>
+
+<!-- olhos -->
+<g id="olhos">
+  <path d="M233,266 C241,249 276,249 284,266 C276,282 241,282 233,266 Z" fill="#F3EEE8"/>
+  <circle cx="259" cy="265" r="15" fill="url(#gIris)"/>
+  <circle cx="259" cy="265" r="15" fill="none" stroke="#190D04" stroke-width="2.2" opacity=".85"/>
+  <circle cx="259" cy="265" r="6.4" fill="#110903"/>
+  <circle cx="254.5" cy="259.5" r="4.4" fill="#FFFFFF" opacity=".95"/>
+  <circle cx="265" cy="271" r="2" fill="#FFFFFF" opacity=".5"/>
+  <path d="M233,266 C241,249 276,249 284,266" stroke="var(--fundoPele)" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M232,265 C240,247 278,247 286,264" stroke="#1A1009" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M235,272 C243,284 275,284 283,271" stroke="var(--sombra)" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".7"/>
+
+  <path d="M316,266 C324,249 359,249 367,266 C359,282 324,282 316,266 Z" fill="#F3EEE8"/>
+  <circle cx="341" cy="265" r="15" fill="url(#gIris)"/>
+  <circle cx="341" cy="265" r="15" fill="none" stroke="#190D04" stroke-width="2.2" opacity=".85"/>
+  <circle cx="341" cy="265" r="6.4" fill="#110903"/>
+  <circle cx="336.5" cy="259.5" r="4.4" fill="#FFFFFF" opacity=".95"/>
+  <circle cx="347" cy="271" r="2" fill="#FFFFFF" opacity=".5"/>
+  <path d="M316,266 C324,249 359,249 367,266" stroke="var(--fundoPele)" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M314,264 C322,247 360,247 368,265" stroke="#1A1009" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M317,271 C325,284 357,284 365,272" stroke="var(--sombra)" stroke-width="2.4" fill="none" stroke-linecap="round" opacity=".7"/>
+</g>
+
+<!-- boca sorrindo (fechada) -->
+<g id="boca" transform="translate(0,-16)">
+  <ellipse cx="300" cy="378" rx="46" ry="18" fill="var(--sombra)" opacity=".2" filter="url(#b12)"/>
+  <path d="M300,348 C297,356 296,362 296,366 M300,348 C303,356 304,362 304,366" stroke="var(--sombra)" stroke-width="2.2" fill="none" opacity=".35"/>
+  <path d="M269,372 C278,363 288,361 295,365 C297,367 303,367 305,365 C312,361 322,363 331,372 C321,377 311,379 300,379 C289,379 279,377 269,372 Z" fill="var(--labio)"/>
+  <path d="M269,372 C279,377 289,379 300,379 C311,379 321,377 331,372 C329,387 316,396 300,396 C284,396 271,387 269,372 Z" fill="url(#gLabioInf)"/>
+  <ellipse cx="300" cy="387" rx="16" ry="4.5" fill="#FFFFFF" opacity=".24" filter="url(#b3)"/>
+  <ellipse cx="300" cy="404" rx="24" ry="6" fill="var(--sombra)" opacity=".35" filter="url(#b6)"/>
+  <path d="M269,372 C279,377 289,379 300,379 C311,379 321,377 331,372" stroke="var(--fundoPele)" stroke-width="1.6" fill="none" opacity=".5"/>
+  <circle cx="270" cy="371" r="5" fill="var(--sombra)" opacity=".45" filter="url(#b3)"/>
+  <circle cx="330" cy="371" r="5" fill="var(--sombra)" opacity=".45" filter="url(#b3)"/>
+</g>
+
+<!-- cabelo da frente: massa unica -->
+<g clip-path="url(#clipCabFrente)">
+  <rect x="0" y="0" width="600" height="600" fill="url(#gCabelo)"/>
+  <g id="brilho-frente"></g>
+</g>
+
+<script>
+  var q = new URLSearchParams(location.search);
+  var pele   = q.get('pele')   || 'media';
+  var cabelo = q.get('cabelo') || 'cacheado';
+  var cor    = q.get('cor')    || 'preto';
+  var fundo  = q.get('fundo')  || 'magenta';
+  document.body.className = 'pele-' + pele + ' cab-' + cor + ' fundo-' + fundo;
+
+  var NS = 'http://www.w3.org/2000/svg';
+  function el(t, a){ var n = document.createElementNS(NS, t); for (var k in a) n.setAttribute(k, a[k]); return n; }
+
+  /* ---------- sobrancelhas ---------- */
+  var sob = document.getElementById('sobrancelhas');
+  function sobrancelha(x0, dir){
+    var x1 = x0 + dir * 56;
+    sob.appendChild(el('path', {
+      d: 'M' + x0 + ',245 C' + (x0 + dir*16) + ',234 ' + (x0 + dir*38) + ',232 ' + x1 + ',242'
+         + ' C' + (x0 + dir*38) + ',238 ' + (x0 + dir*16) + ',241 ' + x0 + ',250 Z',
+      fill: 'var(--h2)', opacity: '.92', filter: 'url(#b3)'
+    }));
+    for (var i = 0; i < 9; i++){
+      var t = i / 8;
+      var x = x0 + dir * (t * 54);
+      var y = 246 - Math.sin(t * Math.PI) * 7 + t * 3;
+      var len = 10 - Math.abs(t - 0.4) * 8;
+      sob.appendChild(el('path', {
+        d: 'M' + x + ',' + y + ' q' + (dir*len*0.6) + ',' + (-len*0.5) + ' ' + (dir*len*1.15) + ',' + (-len*0.62),
+        stroke: 'var(--h1)', fill: 'none', 'stroke-linecap': 'round',
+        'stroke-width': (2.0 - t * 0.8).toFixed(1), opacity: (0.45 - t * 0.2).toFixed(2)
+      }));
+    }
+  }
+  sobrancelha(236, 1);
+  sobrancelha(364, -1);
+
+  /* ---------- cabelo ---------- */
+  var clipT = document.getElementById('clipCabTras');
+  var clipF = document.getElementById('clipCabFrente');
+  var brilhoT = document.getElementById('brilho-tras');
+  var brilhoF = document.getElementById('brilho-frente');
+
+  if (cabelo === 'cacheado'){
+    clipT.appendChild(el('ellipse', {cx:300, cy:254, rx:140, ry:166}));
+    [[300,122,46],[234,134,42],[366,134,42],[184,182,40],[416,182,40],
+     [162,250,38],[438,250,38],[164,316,36],[436,316,36],
+     [182,370,34],[418,370,34],[216,410,30],[384,410,30]]
+    .forEach(function(c){ clipT.appendChild(el('circle', {cx:c[0], cy:c[1], r:c[2]})); });
+
+    [[240,150,34],[300,132,40],[360,150,34],[190,214,24],[410,214,24],[176,300,20],[424,300,20]]
+    .forEach(function(c){
+      brilhoT.appendChild(el('ellipse', {cx:c[0], cy:c[1], rx:c[2], ry:c[2]*0.62,
+        fill:'var(--h4)', opacity:'.26', filter:'url(#b12)'}));
+    });
+
+    clipF.appendChild(el('path', {d:
+      'M188,256 C186,164 236,104 300,104 C364,104 414,164 412,256' +
+      ' C408,214 390,192 364,186 C336,180 320,196 300,196' +
+      ' C280,196 264,180 236,186 C210,192 192,214 188,256 Z'}));
+    [[230,192,27],[266,176,33],[302,172,29],[334,180,34],[370,198,26],[300,152,36]]
+    .forEach(function(c){ clipF.appendChild(el('circle', {cx:c[0], cy:c[1], r:c[2]})); });
+
+    [[252,164,26],[300,144,30],[348,164,26]].forEach(function(c){
+      brilhoF.appendChild(el('ellipse', {cx:c[0], cy:c[1], rx:c[2], ry:c[2]*0.5,
+        fill:'var(--h4)', opacity:'.3', filter:'url(#b12)'}));
+    });
+    brilhoF.appendChild(el('ellipse', {cx:300, cy:206, rx:110, ry:22, fill:'#000', opacity:'.3', filter:'url(#b12)'}));
+
+  } else {
+    clipT.appendChild(el('path', {d:
+      'M300,98 C386,98 432,160 436,246 C440,330 448,398 458,456' +
+      ' C462,484 448,500 426,496 C408,492 398,472 394,448' +
+      ' C388,400 386,352 384,310 C378,338 362,352 342,356' +
+      ' C320,360 306,358 300,358 C294,358 280,360 258,356' +
+      ' C238,352 222,338 216,310 C214,352 212,400 206,448' +
+      ' C202,472 192,492 174,496 C152,500 138,484 142,456' +
+      ' C152,398 160,330 164,246 C168,160 214,98 300,98 Z'}));
+
+    [[218,178,-28],[252,146,-16],[348,146,16],[382,178,28]].forEach(function(m){
+      brilhoT.appendChild(el('ellipse', {cx:m[0], cy:m[1], rx:13, ry:50,
+        transform:'rotate(' + m[2] + ' ' + m[0] + ' ' + m[1] + ')',
+        fill:'var(--h4)', opacity:'.24', filter:'url(#b12)'}));
+    });
+    [[182,346],[418,346]].forEach(function(m){
+      brilhoT.appendChild(el('ellipse', {cx:m[0], cy:m[1], rx:10, ry:72,
+        fill:'var(--h4)', opacity:'.18', filter:'url(#b12)'}));
+    });
+
+    clipF.appendChild(el('path', {d:
+      'M186,290 C182,168 238,104 300,104 C364,104 420,168 416,290' +
+      ' C408,228 390,184 364,174 C336,163 314,188 276,198' +
+      ' C240,207 208,200 196,216 C188,228 188,256 186,290 Z'}));
+
+    [[252,152,-18],[332,144,14]].forEach(function(m){
+      brilhoF.appendChild(el('ellipse', {cx:m[0], cy:m[1], rx:15, ry:42,
+        transform:'rotate(' + m[2] + ' ' + m[0] + ' ' + m[1] + ')',
+        fill:'var(--h4)', opacity:'.3', filter:'url(#b12)'}));
+    });
+    brilhoF.appendChild(el('ellipse', {cx:300, cy:200, rx:106, ry:22, fill:'#000', opacity:'.3', filter:'url(#b12)'}));
+  }
+</script>
+</svg>

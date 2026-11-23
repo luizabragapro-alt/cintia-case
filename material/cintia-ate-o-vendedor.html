@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>html{color-scheme:light}body{margin:0}</style>
+<title>CintIA até o vendedor</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: coluna de leitura única; a conversa à esquerda como trilha de bolhas, e os CTAs marcados na própria trilha */
+:root {
+  --bg: #EEEFF1;
+  --surface: #FFFFFF;
+  --ink: #2F2F32;
+  --muted: #6D7079;
+  --line: #DADCE2;
+  --magenta: #DC36C0;
+  --magenta-ink: #A3258E;
+  --magenta-soft: #FBE6F7;
+  --amber: #FFB92A;
+  --amber-soft: #FFF3D6;
+  --ok: #1F8A5B;
+  --ok-soft: #E2F4EB;
+  --no: #B3402F;
+  --no-soft: #FBE7E3;
+  --bubble-in: #FFFFFF;
+  --bubble-out: #F3E4F0;
+  --font: "Open Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #17161B; --surface: #211F26; --ink: #ECEAF0; --muted: #A09DAA; --line: #35323D;
+    --magenta: #F065D6; --magenta-ink: #F59BE3; --magenta-soft: #3A1E35;
+    --amber: #FFC54D; --amber-soft: #3A2F15; --ok: #5BCB97; --ok-soft: #173327; --no: #F08A78; --no-soft: #3B1F1A;
+    --bubble-in: #2A2830; --bubble-out: #3A2436;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #17161B; --surface: #211F26; --ink: #ECEAF0; --muted: #A09DAA; --line: #35323D;
+  --magenta: #F065D6; --magenta-ink: #F59BE3; --magenta-soft: #3A1E35;
+  --amber: #FFC54D; --amber-soft: #3A2F15; --ok: #5BCB97; --ok-soft: #173327; --no: #F08A78; --no-soft: #3B1F1A;
+  --bubble-in: #2A2830; --bubble-out: #3A2436;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 15px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 40px 72px;
+}
+.wrap { max-width: 920px; margin: 0 auto; display: flex; flex-direction: column; gap: 48px; }
+h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.2; }
+h1 { font-size: clamp(28px, 5vw, 40px); font-weight: 800; letter-spacing: -0.02em; }
+h2 { font-size: 22px; font-weight: 800; letter-spacing: -0.01em; }
+h3 { font-size: 16px; font-weight: 700; }
+p { margin: 0; max-width: 68ch; }
+.eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--magenta-ink); }
+.lede { font-size: 17px; color: var(--muted); }
+section { display: flex; flex-direction: column; gap: 16px; }
+code, .mono { font-family: var(--mono); font-size: 0.86em; }
+code { background: var(--magenta-soft); color: var(--magenta-ink); padding: 1px 5px; border-radius: 3px; overflow-wrap: anywhere; }
+.muted { color: var(--muted); }
+strong { font-weight: 700; }
+
+header.top { display: flex; flex-direction: column; gap: 14px; }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); margin-top: 8px; }
+.fact { background: var(--surface); padding: 14px 16px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.fact b { font-size: 26px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.fact span { font-size: 13px; color: var(--muted); }
+
+/* Trilha da conversa */
+.trail { display: flex; flex-direction: column; gap: 0; border-left: 2px solid var(--line); margin-left: 10px; }
+.step { position: relative; padding: 0 0 26px 26px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; }
+.step::before { content: ""; position: absolute; left: -7px; top: 4px; width: 12px; height: 12px; background: var(--surface); border: 2px solid var(--muted); border-radius: 50%; }
+.step.cta::before { background: var(--magenta); border-color: var(--magenta); }
+.step.gate::before { background: var(--amber); border-color: var(--amber); }
+.step .label { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.step .what { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.chat { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.b { padding: 8px 12px; border-radius: 10px; font-size: 14px; max-width: 100%; border: 1px solid var(--line); }
+.b.in { background: var(--bubble-in); align-self: flex-start; border-top-left-radius: 2px; }
+.b.out { background: var(--bubble-out); align-self: flex-end; border-top-right-radius: 2px; border-color: transparent; }
+.btns { display: flex; gap: 6px; flex-wrap: wrap; align-self: flex-end; }
+.btns span { font-size: 13px; font-weight: 600; color: var(--magenta-ink); border: 1px solid var(--magenta); border-radius: 6px; padding: 4px 10px; background: var(--surface); }
+.tag { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 4px; width: fit-content; }
+.tag.cta { background: var(--magenta-soft); color: var(--magenta-ink); }
+.tag.gate { background: var(--amber-soft); color: var(--ink); }
+.tag.new { background: var(--ok-soft); color: var(--ok); }
+.legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 13px; color: var(--muted); }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; border: 2px solid var(--muted); }
+.legend i.c { background: var(--magenta); border-color: var(--magenta); }
+.legend i.g { background: var(--amber); border-color: var(--amber); }
+
+/* Tabelas */
+.tbl { overflow-x: auto; border: 1px solid var(--line); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 14px; }
+th, td { text-align: left; vertical-align: top; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+th { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); background: var(--bg); }
+tr:last-child td { border-bottom: 0; }
+td.num { font-variant-numeric: tabular-nums; font-weight: 700; white-space: nowrap; }
+
+/* Escada de roteamento */
+.ladder { display: flex; flex-direction: column; gap: 10px; }
+.rung { display: grid; grid-template-columns: 210px minmax(0, 1fr) 190px; gap: 0; background: var(--surface); border: 1px solid var(--line); }
+.rung > div { padding: 12px 16px; min-width: 0; }
+.rung .q { font-weight: 700; border-right: 1px solid var(--line); }
+.rung .dest { border-left: 1px solid var(--line); font-weight: 700; display: flex; flex-direction: column; gap: 2px; }
+.rung .dest small { font-weight: 400; color: var(--muted); font-size: 12px; }
+.rung.stop .dest { background: var(--no-soft); color: var(--no); }
+.rung.go .dest { background: var(--ok-soft); color: var(--ok); }
+.rung.cs .dest { background: var(--amber-soft); color: var(--ink); }
+.rung .n { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+
+/* Caso */
+.case { background: var(--surface); border: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.case > div { padding: 18px 20px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.case > div + div { border-left: 1px solid var(--line); }
+.case h3 { font-size: 14px; letter-spacing: 0.04em; text-transform: uppercase; }
+.case .now h3 { color: var(--no); }
+.case .then h3 { color: var(--ok); }
+
+ol.plain, ul.plain { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; max-width: 72ch; }
+.note { border-left: 3px solid var(--amber); background: var(--amber-soft); padding: 12px 16px; font-size: 14px; }
+.decide { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+.decide > div { background: var(--surface); border: 1px solid var(--line); padding: 16px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.decide .who { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--magenta-ink); }
+footer { font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 16px; display: flex; flex-direction: column; gap: 6px; }
+
+@media (max-width: 720px) {
+  .step { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .rung { grid-template-columns: minmax(0, 1fr); }
+  .rung .q { border-right: 0; border-bottom: 1px solid var(--line); }
+  .rung .dest { border-left: 0; border-top: 1px solid var(--line); }
+  .case { grid-template-columns: minmax(0, 1fr); }
+  .case > div + div { border-left: 0; border-top: 1px solid var(--line); }
+}
+</style>
+
+<div class="wrap">
+
+<header class="top">
+  <div class="eyebrow">Geração de demanda · CintIA no WhatsApp · 10/11/2026</div>
+  <h1>CintIA até o vendedor</h1>
+  <p class="lede">Onde a conversa com a CintIA pode ter um call to action, e qual regra decide quem vai pro vendedor. A regra base: antes de passar qualquer pessoa adiante, a CintIA confere se o CNPJ já é cliente. Cliente não vai pra vendas.</p>
+  <div class="facts">
+    <div class="fact"><b>~10</b><span>conversas até hoje, sem divulgação</span></div>
+    <div class="fact"><b>0</b><span>cadastros com <code>origin = cintia</code> no data warehouse</span></div>
+    <div class="fact"><b>3</b><span>CTAs que já existem na conversa</span></div>
+    <div class="fact"><b>4</b><span>CTAs novos propostos aqui</span></div>
+  </div>
+</header>
+
+<section>
+  <div class="eyebrow">1 · A jornada como está no ar</div>
+  <h2>Uma conversa de primeira vez, e onde cabe cada CTA</h2>
+  <p class="muted">Textos tirados dos prompts que estão no hub de agentes (portal de encomendas, CintIA). Os pontos coloridos marcam onde a conversa pede alguma coisa da farmácia.</p>
+  <div class="legend"><span><i class="g"></i>porta (CNPJ)</span><span><i class="c"></i>call to action</span><span><i></i>só entrega</span></div>
+
+  <div class="trail">
+    <div class="step">
+      <div class="what">
+        <span class="label">Abertura</span>
+        <p>Se apresenta e pergunta o produto. Se a primeira mensagem já traz o produto, pula direto pra busca.</p>
+        <span class="tag">sem CTA, de propósito</span>
+      </div>
+      <div class="chat">
+        <div class="b in">oi</div>
+        <div class="b out">Oi! 👋 Eu sou a CintIA, da [Empresa].</div>
+        <div class="b out">Qual medicamento ou produto você quer cotar hoje?</div>
+      </div>
+    </div>
+
+    <div class="step gate">
+      <div class="what">
+        <span class="label">Prévia + pedido do CNPJ</span>
+        <p>Mostra quantas distribuidoras têm e a faixa de preço, sem nomes. Os nomes ficam pra depois do CNPJ.</p>
+        <span class="tag gate">CTA de porta: o CNPJ</span>
+        <p class="muted">É aqui que a CintIA fica sabendo quem é a farmácia. Toda regra de passagem depende deste dado.</p>
+      </div>
+      <div class="chat">
+        <div class="b in">dipirona 500mg</div>
+        <div class="b out">Encontrei! Dipirona Sódica 500mg 20cp<br>📦 6 distribuidoras têm hoje<br>💰 Os preços vão de R$ 1,21 a R$ 2,34</div>
+        <div class="b out">Pra te mostrar qual tá com o menor preço, preciso do CNPJ da sua farmácia 🙂</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="what">
+        <span class="label">Validação + rota</span>
+        <p><strong>Rota A</strong> (farmácia em SP) recebe a cotação e vira MQL. <strong>C</strong> (fora de SP), <strong>D</strong> (não é farmácia) e quem recusa o CNPJ duas vezes não viram lead.</p>
+        <span class="tag new">novo: checar aqui se já é cliente</span>
+      </div>
+      <div class="chat">
+        <div class="b in">11.222.333/0001-81</div>
+        <div class="b out">✅ CNPJ confirmado, achei você!<br><br><strong>Distribuidora D — R$ 1,21</strong><br>Distribuidora A — R$ 1,45<br>…<br>💰 Média: R$ 1,75 · variação de hoje: 93%</div>
+      </div>
+    </div>
+
+    <div class="step cta">
+      <div class="what">
+        <span class="label">Depois da cotação</span>
+        <p>O sistema anexa a nota de preço de referência e dois botões. A terceira saída, que é seguir cotando, fica sem botão.</p>
+        <span class="tag cta">CTA ① Quero o link · CTA ② Prefiro ajuda</span>
+        <p class="muted">O link vai com <code>utm_source=cintia</code> e <code>utm_campaign=cintia-botao-link</code>. O ② manda pro WhatsApp do executivo comercial com CNPJ e produto já escritos.</p>
+      </div>
+      <div class="chat">
+        <div class="b out">Esses são os preços de referência de hoje 🙂 Pra ver o preço exato da sua farmácia, precisa ter cadastro. É gratuito.</div>
+        <div class="b out">Quer fazer agora? Te mando o link. Se preferir ajuda, o executivo comercial do nosso time faz junto com você.</div>
+        <div class="btns"><span>Quero o link</span><span>Prefiro ajuda</span></div>
+      </div>
+    </div>
+
+    <div class="step cta">
+      <div class="what">
+        <span class="label">Salvar o contato</span>
+        <p>Manda o cartão de contato da CintIA. É o único jeito de a farmácia voltar, porque a [Empresa] não pode iniciar conversa.</p>
+        <span class="tag cta">CTA ③ Salvar contato</span>
+        <span class="tag new">proposta: depois do clique, com motivo</span>
+        <p class="muted">Hoje o cartão sai junto com os botões e compete com eles. Proposta: vem logo depois da resposta ao clique, antes de a pessoa sair pro cadastro ou pro executivo comercial. Sem clique, vem no fim da 2ª cotação.</p>
+      </div>
+      <div class="chat">
+        <div class="b out">Me salva aqui como CintIA 💜 Sempre que precisar de preço, é só me mandar o nome do produto. Te respondo na hora, com todas as distribuidoras.</div>
+        <div class="b out">[cartão de contato: CintIA]</div>
+      </div>
+    </div>
+
+    <div class="step cta">
+      <div class="what">
+        <span class="label">Conversas seguintes</span>
+        <p>Só o produto, sem pedir o CNPJ de novo. O convite pro cadastro volta a cada ~3 cotações, com <code>utm_campaign=cintia-recorrente</code>.</p>
+        <span class="tag cta">CTA ① de novo, espaçado</span>
+        <span class="tag new">novo: oferta de pessoa a partir da 2ª cotação</span>
+      </div>
+      <div class="chat">
+        <div class="b in">losartana 50mg</div>
+        <div class="b out">Losartana Potássica 50mg 30cp hoje: …</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">2 · Todos os pontos de CTA</div>
+  <h2>Os que já existem e os que faltam</h2>
+  <div class="tbl">
+    <table>
+      <thead><tr><th>Momento</th><th>CTA</th><th>Quem pediu</th><th>Situação</th></tr></thead>
+      <tbody>
+        <tr><td>Pediu pessoa, em qualquer ponto da conversa</td><td>Link do executivo comercial, só se tiver CNPJ de farmácia de SP que não é cliente</td><td>a farmácia</td><td>existe, mas sem checar se é cliente</td></tr>
+        <tr><td>Depois da 1ª cotação</td><td>① Quero o link · ② Prefiro ajuda</td><td>CintIA oferece</td><td>existe</td></tr>
+        <tr><td>Depois da 1ª cotação</td><td>③ Salvar contato</td><td>CintIA oferece</td><td>existe</td></tr>
+        <tr><td>"Não tenho cadastro nessa distribuidora"</td><td>Chamar alguém do time</td><td>CintIA oferece</td><td>existe</td></tr>
+        <tr><td>2ª limitação seguida (áudio, foto, lista grande)</td><td>"Quer que eu chame alguém pra te ajudar com isso?"</td><td>CintIA oferece</td><td><span class="tag new">novo</span></td></tr>
+        <tr><td>Perguntou frete, prazo ou pedido mínimo</td><td>"Quer que alguém do time te mostre como fica pra sua farmácia?"</td><td>CintIA oferece</td><td><span class="tag new">novo</span></td></tr>
+        <tr><td>2ª cotação sem cadastro</td><td>Mesma oferta de pessoa, uma vez</td><td>CintIA oferece</td><td><span class="tag new">novo</span></td></tr>
+        <tr><td>Fez o cadastro depois de cotar</td><td>Card no CRM pra ativação, sem mensagem nova na CintIA</td><td>o cadastro autoriza contato</td><td><span class="tag new">novo</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">Os CTAs novos são <strong>ofertas</strong>: a CintIA pergunta, e só passa adiante quem diz sim. Isso importa porque ela promete em texto, na resposta "Vou receber ligação?", que ninguém liga sem a pessoa pedir. Se o comercial ligar pra quem não pediu, essa resposta precisa mudar antes.</div>
+</section>
+
+<section>
+  <div class="eyebrow">3 · A regra de passagem</div>
+  <h2>Antes de passar qualquer pessoa, a CintIA confere o CNPJ</h2>
+  <p>O objetivo da CintIA é gerar lead. Então só vai pro vendedor <strong>farmácia de SP que ainda não é cliente</strong>, e a passagem é um link de WhatsApp que a própria pessoa toca pra falar com o executivo comercial. Vale pra todo CTA que envolve gente: pediu pessoa, travou em áudio ou foto, clicou "Prefiro ajuda". Se ainda não tem o CNPJ, a CintIA pergunta antes: <em>"Pra eu te passar pra pessoa certa, me manda o CNPJ ou o nome da sua farmácia?"</em>. Pelo nome a busca é menos certeira, então ela confirma: <em>"É a Drogaria X, de Osasco?"</em>.</p>
+
+  <div class="ladder">
+    <div class="rung stop"><div class="q">Não é farmácia (rota D) ou fora de SP (rota C)</div><div>Não passa pra vendas. Se pediu pessoa, vai pro atendimento geral.</div><div class="dest">Não é lead<small>só analytics</small></div></div>
+    <div class="rung cs"><div class="q">Cliente ativo</div><div>Tem pedido nos últimos 90 dias. Já faz isso pela plataforma e provavelmente só quer o preço. A CintIA lembra que a plataforma mostra o preço dele e segue cotando.<br><span class="n">milhares de clientes</span></div><div class="dest">Não vai pra vendas<small>suporte só se for dúvida de pedido</small></div></div>
+    <div class="rung go"><div class="q">Já tem card aberto no CRM</div><div>Alguém do comercial já cuida desse CNPJ. Avisa o dono do card em vez de criar card novo.</div><div class="dest">Dono do card<small>sem duplicar</small></div></div>
+    <div class="rung go"><div class="q">Cadastrado, nunca comprou</div><div>Tem conta e nenhum pedido. Caso clássico de ativação.<br><span class="n">a maior parte da base</span></div><div class="dest">Vendas · ativação</div></div>
+    <div class="rung go"><div class="q">Já comprou, parou</div><div>Último pedido há mais de 90 dias. Caso de reativação.<br><span class="n">parcela relevante da base</span></div><div class="dest">Vendas · reativação<small>ou CS: decidir</small></div></div>
+    <div class="rung go"><div class="q">Farmácia SP sem cadastro</div><div>Rota A sem conta na plataforma. É o lead novo, o que a CintIA existe pra gerar.</div><div class="dest">Vendas · aquisição</div></div>
+  </div>
+  <p class="muted">A ordem importa: a CintIA para no primeiro degrau que bate. "Ativo" aqui é qualquer pedido nos últimos 90 dias na <code>tabela_pedidos</code>. O corte de 90 dias é uma proposta e pode mudar.</p>
+</section>
+
+<section>
+  <div class="eyebrow">4 · Um caso real</div>
+  <h2>O cliente: áudio, foto, e pediu pra falar com alguém</h2>
+  <div class="case">
+    <div class="now">
+      <h3>Como foi</h3>
+      <ul class="plain">
+        <li>Mandou áudio: a CintIA pediu pra escrever.</li>
+        <li>Mandou foto: a CintIA disse que ainda não lê foto.</li>
+        <li>Pediu pra falar com alguém: a CintIA passou pra uma pessoa.</li>
+        <li>Ninguém conferiu se a farmácia dele já é cliente, e o vendedor recebe sem saber.</li>
+      </ul>
+    </div>
+    <div class="then">
+      <h3>Como deveria ser</h3>
+      <ul class="plain">
+        <li>Na 2ª limitação seguida (a foto), a própria CintIA já oferece uma pessoa, sem esperar ele pedir. Enquanto ela não lê áudio nem foto, esse é o caminho de ajuda.</li>
+        <li>Quando ele aceita ou pede, ela pede o CNPJ ou o nome da farmácia, pra mandar pra pessoa certa.</li>
+        <li>Com o CNPJ, ela confere a escada acima. Se for cliente ativo, vai pro CS. Se não for, vai pra vendas com contexto.</li>
+        <li>O vendedor recebe: CNPJ, status (cliente ou não), o que ele tentou mandar (áudio, foto), produto, se houver, e horário.</li>
+      </ul>
+    </div>
+  </div>
+  <p class="muted">Quem manda foto de falteiro está com a lista de compras na mão. É um sinal de intenção alto, e hoje a conversa termina em "ainda não sei fazer".</p>
+</section>
+
+<section>
+  <div class="eyebrow">5 · O que precisa ser construído</div>
+  <h2>Pro time de tech</h2>
+  <ol class="plain">
+    <li><strong>Checagem de cliente por CNPJ.</strong> Uma tool no hub (<code>check_client_status</code>, por exemplo) que devolve: tem conta, data do último pedido, card aberto no CRM e dono do card. A CintIA chama antes de qualquer passagem.</li>
+    <li><strong>Pedir o CNPJ antes de passar</strong>, quando ainda não tem. Uma vez só, e passa mesmo se a pessoa recusar.</li>
+    <li><strong>Dois destinos de passagem</strong> em vez de um: vendas (executivo comercial) e CS/suporte. O hub já tem a estrutura de atendimento humano do suporte pra servir de base.</li>
+    <li><strong>Contador por telefone</strong>: cotações, limitações seguidas (áudio, foto, lista) e se a oferta de pessoa já foi feita. A spec já prevê guardar o estado por telefone.</li>
+    <li><strong>Detectar o cadastro pelo CNPJ</strong>, cruzando o CNPJ que a CintIA guardou com a <code>tabela_leads</code>. Não dá pra depender só do UTM: quem cadastra depois pelo Google perde a atribuição.</li>
+    <li><strong>Card no CRM pelo backend</strong>, com o contexto da conversa e a checagem de duplicidade.</li>
+    <li><strong>Conferir o link que está no ar.</strong> O link do cadastro é montado no código do agente, e ainda não deu pra ver se ele sai com o UTM.</li>
+  </ol>
+</section>
+
+<section>
+  <div class="eyebrow">6 · Decisões em aberto</div>
+  <h2>O que precisa de resposta antes de construir</h2>
+  <div class="decide">
+    <div><span class="who">Marketing + comercial</span><h3>Oferecer ou ligar direto?</h3><p>A proposta aqui é oferecer e passar só quem aceita. Ligar pra quem cotou 2 vezes sem pedir exige mudar a resposta "Vou receber ligação?".</p></div>
+    <div><span class="who">Comercial</span><h3>Quem atende o "já comprou, parou"?</h3><p>Reativação pode ser do vendedor ou do CS. É uma parcela relevante da base.</p></div>
+    <div><span class="who">CS</span><h3>Cliente ativo que pede pessoa vai pra onde?</h3><p>Pro suporte da plataforma, ou pro executivo da carteira quando ele tem um? Só uma minoria dos ativos tem vendedor no cadastro.</p></div>
+    <div><span class="who">Comercial</span><h3>Número e horário do executivo comercial</h3><p>O link do WhatsApp dele ainda está pendente na spec. Fora do horário, a CintIA precisa avisar que alguém retorna.</p></div>
+  </div>
+</section>
+
+<footer>
+  <span><strong>Simulação:</strong> <a href="#" target="_blank" rel="noopener">Simulador CintIA</a>, com os três cenários tocando no celular.</span>
+  <span><strong>Fontes:</strong> spec <code>cintia-ura-whatsapp.md</code> (24/09/2026); prompts da CintIA em <code>repositório dos agentes</code> (<code>arquivo de prompts padrão</code>, branch main); data warehouse <code>tabela_leads</code>, <code>tabela_clientes</code> e <code>tabela_pedidos</code>, consultados em 10/11/2026.</span>
+  <span><strong>Limites:</strong> as primeiras conversas do portal não foram lidas uma a uma, porque o portal pede login. O caso do cliente está descrito como a Luiza contou. A contagem de clientes por status não exclui pedidos cancelados.</span>
+</footer>
+
+</div>

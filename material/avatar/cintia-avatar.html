@@ -1,0 +1,127 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Avatar CintIA</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1024px;height:1024px;overflow:hidden}
+  svg{display:block;width:1024px;height:1024px}
+
+  /* ---- paleta de pele (tons brasileiros) ---- */
+  .pele-clara  { --pele:#E8B48C; --pele-sombra:#CF9870; --boca:#9C4F45; --blush:#D98C6B }
+  .pele-media  { --pele:#C28E63; --pele-sombra:#A5734C; --boca:#8A4238; --blush:#B06B4C }
+  .pele-escura { --pele:#8A5A38; --pele-sombra:#6E452A; --boca:#5E2B23; --blush:#7A4228 }
+  .pele-retinta{ --pele:#76492A; --pele-sombra:#5A3620; --boca:#45211A; --blush:#633719 }
+
+  /* ---- cabelo ---- */
+  .cab-preto   { --cabelo:#211610 }
+  .cab-castanho{ --cabelo:#3B2415 }
+
+  /* ---- fundo + roupa ---- */
+  .fundo-magenta { --bg:#DC36C0; --roupa:#FFFFFF; --gola:#D9DBE0 }
+  .fundo-claro   { --bg:#F9C0EA; --roupa:#2F2F32; --gola:#17171A }
+  .fundo-escuro  { --bg:#2F2F32; --roupa:#FFFFFF; --gola:#D9DBE0 }
+</style>
+<body>
+<svg viewBox="40 44 432 432" xmlns="http://www.w3.org/2000/svg" id="art">
+  <rect x="0" y="0" width="512" height="512" fill="var(--bg)"/>
+
+  <!-- cabelo de tras -->
+  <g id="cabelo-tras" fill="var(--cabelo)"></g>
+
+  <!-- pescoco -->
+  <path d="M230,316 L282,316 L294,422 L218,422 Z" fill="var(--pele-sombra)"/>
+
+  <!-- ombros -->
+  <path d="M20,512 C26,454 106,420 190,410 L322,410 C406,420 486,454 492,512 Z" fill="var(--roupa)"/>
+
+  <!-- orelhas -->
+  <ellipse cx="152" cy="256" rx="15" ry="24" fill="var(--pele)"/>
+  <ellipse cx="360" cy="256" rx="15" ry="24" fill="var(--pele)"/>
+
+  <!-- cabeca -->
+  <path d="M256,116
+           C198,116 156,162 156,232
+           C156,284 163,318 184,342
+           C205,367 230,378 256,378
+           C282,378 307,367 328,342
+           C349,318 356,284 356,232
+           C356,162 314,116 256,116 Z" fill="var(--pele)"/>
+
+  <!-- cabelo da frente -->
+  <g id="cabelo-frente" fill="var(--cabelo)"></g>
+
+  <!-- blush -->
+  <ellipse cx="194" cy="298" rx="27" ry="14" fill="var(--blush)" opacity=".36"/>
+  <ellipse cx="318" cy="298" rx="27" ry="14" fill="var(--blush)" opacity=".36"/>
+
+  <!-- sobrancelhas -->
+  <path d="M194,218 Q213,207 234,216" stroke="var(--cabelo)" stroke-width="9" fill="none" stroke-linecap="round"/>
+  <path d="M278,216 Q299,207 318,218" stroke="var(--cabelo)" stroke-width="9" fill="none" stroke-linecap="round"/>
+
+  <!-- olhos -->
+  <g>
+    <ellipse cx="212" cy="253" rx="18" ry="13" fill="#FFFFFF"/>
+    <ellipse cx="300" cy="253" rx="18" ry="13" fill="#FFFFFF"/>
+    <circle cx="214" cy="253" r="9.5" fill="#2B1B14"/>
+    <circle cx="302" cy="253" r="9.5" fill="#2B1B14"/>
+    <circle cx="217.5" cy="249.5" r="3.4" fill="#FFFFFF"/>
+    <circle cx="305.5" cy="249.5" r="3.4" fill="#FFFFFF"/>
+    <path d="M194,245 Q212,235 230,244" stroke="#2B1B14" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="M282,244 Q300,235 318,245" stroke="#2B1B14" stroke-width="5" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- nariz -->
+  <path d="M250,281 C244,297 247,305 256,305 C262,305 266,302 267,298"
+        stroke="var(--pele-sombra)" stroke-width="5" fill="none" stroke-linecap="round"/>
+
+  <!-- boca -->
+  <path d="M220,320 Q256,356 292,320 Q256,336 220,320 Z" fill="var(--boca)"/>
+
+</svg>
+
+<script>
+  var q = new URLSearchParams(location.search);
+  var pele   = q.get('pele')   || 'media';
+  var cabelo = q.get('cabelo') || 'cacheado';
+  var cor    = q.get('cor')    || 'preto';
+  var fundo  = q.get('fundo')  || 'magenta';
+  document.body.className = 'pele-' + pele + ' cab-' + cor + ' fundo-' + fundo;
+
+
+  var tras   = document.getElementById('cabelo-tras');
+  var frente = document.getElementById('cabelo-frente');
+  function el(tag, a){ var n=document.createElementNS('http://www.w3.org/2000/svg',tag);
+    for(var k in a) n.setAttribute(k,a[k]); return n; }
+
+  if (cabelo === 'cacheado') {
+    tras.appendChild(el('ellipse', {cx:256, cy:234, rx:120, ry:142}));
+    [[256,100,38],[196,112,34],[316,112,34],[152,158,34],[360,158,34],
+     [136,216,32],[376,216,32],[136,278,32],[376,278,32],
+     [152,328,34],[360,328,34],[178,364,30],[334,364,30]]
+    .forEach(function(c){ tras.appendChild(el('circle',{cx:c[0],cy:c[1],r:c[2]})); });
+
+    /* cap da frente: comeca acima da cabeca pra nao deixar costura aparecer */
+    frente.appendChild(el('path', {d:
+      'M140,250 C140,150 190,96 256,96 C322,96 372,150 372,250 \
+       C372,206 350,186 324,182 C298,178 282,194 256,194 \
+       C230,194 214,178 188,182 C162,186 140,206 140,250 Z'}));
+    [[186,188,32],[230,176,34],[282,176,34],[326,188,32],[256,158,38]]
+    .forEach(function(c){ frente.appendChild(el('circle',{cx:c[0],cy:c[1],r:c[2]})); });
+
+  } else {
+    /* ondulado na altura do ombro */
+    tras.appendChild(el('path', {d:
+      'M256,92 C332,92 376,146 380,222 \
+       C384,296 392,350 400,398 C404,422 392,438 372,434 \
+       C356,430 348,412 344,390 C338,350 336,310 334,274 \
+       C330,298 318,310 300,314 C280,318 262,316 256,316 \
+       C250,316 232,318 212,314 C194,310 182,298 178,274 \
+       C176,310 174,350 168,390 C164,412 156,430 140,434 \
+       C120,438 108,422 112,398 C120,350 128,296 132,222 \
+       C136,146 180,92 256,92 Z'}));
+    frente.appendChild(el('path', {d:
+      'M140,300 C136,168 192,96 256,96 C322,96 376,168 372,300 \
+       C366,248 352,186 326,172 C300,161 280,186 248,195 \
+       C216,203 186,198 168,212 C150,226 144,260 140,300 Z'}));
+  }
+</script>

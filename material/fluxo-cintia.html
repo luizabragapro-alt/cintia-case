@@ -1,0 +1,1057 @@
+<title>Fluxo da CintIA</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --magenta: #dc36c0;
+    --magenta-deep: #a3258e;
+    --magenta-wash: #fdeffa;
+    --ink: #26262a;
+    --ink-soft: #4a4a52;
+    --mid: #6d7079;
+    --line: #d9d7dd;
+    --line-soft: #ebe9ee;
+    --paper: #fbfafc;
+    --surface: #ffffff;
+    --bot-bg: #ffffff;
+    --bot-line: #e4e1e8;
+    --user-bg: #e2f2e8;
+    --user-line: #c3e0cf;
+    --user-ink: #1d4733;
+    --amber: #ffb92a;
+    --amber-bg: #fff6e2;
+    --amber-ink: #6b4a00;
+    --red: #de1135;
+    --red-bg: #fdeaed;
+    --red-ink: #8c0a21;
+    --green: #0e8345;
+    --green-bg: #e6f4ec;
+    --shadow: 0 1px 2px rgba(38,38,42,.06), 0 6px 16px rgba(38,38,42,.05);
+    --sans: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Code', Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --magenta: #ef6ad4;
+      --magenta-deep: #f9c0ea;
+      --magenta-wash: #2e1b2b;
+      --ink: #f2f0f4;
+      --ink-soft: #cfcbd4;
+      --mid: #9a9ca4;
+      --line: #3c3a41;
+      --line-soft: #302e35;
+      --paper: #1a191d;
+      --surface: #232228;
+      --bot-bg: #2c2a31;
+      --bot-line: #3c3a41;
+      --user-bg: #234437;
+      --user-line: #2f5a48;
+      --user-ink: #d6ece0;
+      --amber: #ffb92a;
+      --amber-bg: #3a2e13;
+      --amber-ink: #ffd88a;
+      --red: #ff6b83;
+      --red-bg: #3b1a20;
+      --red-ink: #ffb3bf;
+      --green: #6eb58f;
+      --green-bg: #1e3a2b;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 16px rgba(0,0,0,.25);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --magenta: #ef6ad4;
+    --magenta-deep: #f9c0ea;
+    --magenta-wash: #2e1b2b;
+    --ink: #f2f0f4;
+    --ink-soft: #cfcbd4;
+    --mid: #9a9ca4;
+    --line: #3c3a41;
+    --line-soft: #302e35;
+    --paper: #1a191d;
+    --surface: #232228;
+    --bot-bg: #2c2a31;
+    --bot-line: #3c3a41;
+    --user-bg: #234437;
+    --user-line: #2f5a48;
+    --user-ink: #d6ece0;
+    --amber: #ffb92a;
+    --amber-bg: #3a2e13;
+    --amber-ink: #ffd88a;
+    --red: #ff6b83;
+    --red-bg: #3b1a20;
+    --red-ink: #ffb3bf;
+    --green: #6eb58f;
+    --green-bg: #1e3a2b;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 6px 16px rgba(0,0,0,.25);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 940px;
+    margin: 0 auto;
+    padding: 40px 20px 72px;
+  }
+
+  /* ---------- header ---------- */
+
+  header { margin-bottom: 40px; }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--magenta);
+    margin: 0 0 10px;
+  }
+
+  h1 {
+    font-size: clamp(30px, 5vw, 42px);
+    font-weight: 800;
+    letter-spacing: -.022em;
+    line-height: 1.08;
+    margin: 0 0 14px;
+    text-wrap: balance;
+  }
+
+  .lede {
+    font-size: 16.5px;
+    color: var(--ink-soft);
+    max-width: 62ch;
+    margin: 0 0 22px;
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .chip {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    font-weight: 500;
+    padding: 5px 10px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    color: var(--mid);
+    background: var(--surface);
+  }
+  .chip b { color: var(--ink); font-weight: 600; }
+
+  /* ---------- legend ---------- */
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 20px;
+    padding: 14px 18px;
+    background: var(--surface);
+    border: 1px solid var(--line-soft);
+    border-radius: 4px;
+    margin-bottom: 40px;
+    font-size: 13px;
+    color: var(--mid);
+  }
+  .legend div { display: flex; align-items: center; gap: 7px; }
+  .swatch {
+    width: 13px; height: 13px; border-radius: 3px; flex: none;
+    border: 1px solid var(--bot-line);
+  }
+  .swatch.bot  { background: var(--bot-bg); }
+  .swatch.user { background: var(--user-bg); border-color: var(--user-line); }
+  .swatch.fork { background: var(--amber-bg); border-color: var(--amber); }
+  .swatch.stop { background: var(--red-bg); border-color: var(--red); }
+
+  /* ---------- section headings ---------- */
+
+  .phase {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin: 0 0 6px;
+    padding-top: 8px;
+  }
+  .phase h2 {
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: -.015em;
+    margin: 0;
+  }
+  .phase .count {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--mid);
+  }
+  .phase-note {
+    color: var(--mid);
+    font-size: 14px;
+    margin: 0 0 26px;
+    max-width: 62ch;
+  }
+
+  /* ---------- the rail ---------- */
+
+  .thread {
+    display: grid;
+    grid-template-columns: 58px minmax(0, 1fr);
+    column-gap: 16px;
+  }
+
+  .step { display: contents; }
+
+  .rail {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 4px;
+  }
+  .rail::before {
+    content: "";
+    position: absolute;
+    top: 0; bottom: -28px;
+    left: 50%;
+    width: 2px;
+    margin-left: -1px;
+    background: var(--line-soft);
+  }
+  .step:last-child .rail::before { bottom: 50%; }
+
+  .marker {
+    position: relative;
+    z-index: 1;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .02em;
+    color: var(--surface);
+    background: var(--magenta);
+    border-radius: 3px;
+    padding: 4px 7px;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .marker.ghost {
+    background: var(--surface);
+    color: var(--mid);
+    border: 1px solid var(--line);
+    padding: 3px 6px;
+  }
+  .marker.you {
+    background: var(--green);
+    color: #fff;
+  }
+
+  .bay {
+    padding-bottom: 28px;
+    min-width: 0;
+  }
+
+  /* ---------- bubbles ---------- */
+
+  .bubble {
+    background: var(--bot-bg);
+    border: 1px solid var(--bot-line);
+    border-radius: 3px 12px 12px 12px;
+    padding: 13px 16px;
+    max-width: 480px;
+    box-shadow: var(--shadow);
+    margin-bottom: 8px;
+  }
+  .bubble:last-child { margin-bottom: 0; }
+  .bubble p { margin: 0 0 9px; }
+  .bubble p:last-child { margin: 0; }
+  .bubble .fine {
+    font-size: 13px;
+    color: var(--mid);
+    font-style: italic;
+  }
+
+  .bubble.user {
+    background: var(--user-bg);
+    border-color: var(--user-line);
+    border-radius: 12px 3px 12px 12px;
+    color: var(--user-ink);
+    margin-left: auto;
+    max-width: 320px;
+    font-family: var(--mono);
+    font-size: 13.5px;
+  }
+
+  .bubble.typing {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    color: var(--mid);
+    font-style: italic;
+    font-size: 14px;
+    box-shadow: none;
+    background: var(--line-soft);
+    border-color: transparent;
+    border-radius: 12px;
+    padding: 9px 14px;
+  }
+  .dots { display: inline-flex; gap: 3px; }
+  .dots i {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--mid);
+    animation: blink 1.4s infinite ease-in-out both;
+  }
+  .dots i:nth-child(2) { animation-delay: .2s; }
+  .dots i:nth-child(3) { animation-delay: .4s; }
+  @keyframes blink {
+    0%, 80%, 100% { opacity: .3; }
+    40% { opacity: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .dots i { animation: none; opacity: .6; }
+  }
+
+  .gap {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    color: var(--mid);
+    letter-spacing: .04em;
+    margin: 0 0 8px 4px;
+  }
+
+  /* price table inside a bubble */
+  .prices {
+    margin: 4px 0 10px;
+    font-variant-numeric: tabular-nums;
+  }
+  .prices .row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 3px 0;
+    border-bottom: 1px solid var(--line-soft);
+    font-size: 14px;
+  }
+  .prices .row:last-child { border-bottom: 0; }
+  .prices .row.best { font-weight: 700; }
+  .prices .row.best .tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--magenta);
+    margin-left: 8px;
+  }
+  .prices .val { font-weight: 600; white-space: nowrap; }
+
+  .btnrow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--line-soft);
+  }
+  .btn {
+    flex: 1 1 auto;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--magenta);
+    border: 1px solid var(--bot-line);
+    border-radius: 6px;
+    padding: 7px 10px;
+    background: var(--surface);
+  }
+
+  .vcard {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    border: 1px dashed var(--bot-line);
+    border-radius: 10px;
+    padding: 11px 14px;
+    max-width: 320px;
+    background: var(--surface);
+    margin-top: 8px;
+  }
+  .vcard .av {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--magenta-wash);
+    color: var(--magenta-deep);
+    display: grid; place-items: center;
+    font-size: 16px;
+    flex: none;
+  }
+  .vcard b { display: block; font-size: 14px; }
+  .vcard span { font-family: var(--mono); font-size: 11.5px; color: var(--mid); }
+
+  /* ---------- branches ---------- */
+
+  .branches {
+    margin-top: 14px;
+    display: grid;
+    gap: 10px;
+  }
+
+  .branch {
+    border-left: 2px dashed var(--line);
+    padding: 0 0 0 16px;
+    position: relative;
+  }
+  .branch::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 13px;
+    width: 10px; height: 2px;
+    background: var(--line);
+  }
+
+  .branch-head {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin: 0 0 6px;
+  }
+
+  .card {
+    border: 1px solid var(--line-soft);
+    background: var(--surface);
+    border-radius: 4px;
+    padding: 12px 15px;
+    font-size: 14px;
+  }
+  .card .say {
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+  .card .outcome {
+    display: inline-block;
+    margin-top: 8px;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    padding: 3px 7px;
+    border-radius: 3px;
+  }
+  .outcome.lead   { background: var(--magenta-wash); color: var(--magenta-deep); }
+  .outcome.nolead { background: var(--red-bg); color: var(--red-ink); }
+  .outcome.wait   { background: var(--amber-bg); color: var(--amber-ink); }
+
+  .card.warn { border-left: 3px solid var(--amber); }
+  .card.stop { border-left: 3px solid var(--red); }
+
+  /* ---------- fork ---------- */
+
+  .fork {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 18px;
+    margin-top: 6px;
+  }
+
+  .lane {
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    background: var(--surface);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .lane-head {
+    padding: 13px 17px;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .lane-head .tag {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 3px;
+  }
+  .lane-head h3 { margin: 0; font-size: 17px; font-weight: 700; letter-spacing: -.01em; }
+  .lane-head p { margin: 5px 0 0; font-size: 13.5px; color: var(--mid); }
+  .lane-body { padding: 15px 17px; flex: 1; }
+
+  .lane.a { border-top: 3px solid var(--mid); }
+  .lane.a .tag { color: var(--mid); }
+  .lane.b { border-top: 3px solid var(--magenta); }
+  .lane.b .tag { color: var(--magenta); }
+
+  .never {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 7px;
+  }
+  .never li {
+    font-size: 13.5px;
+    color: var(--ink-soft);
+    padding-left: 22px;
+    position: relative;
+  }
+  .never li::before {
+    content: "⛔";
+    position: absolute;
+    left: 0;
+    font-size: 11px;
+    top: 2px;
+  }
+
+  .door {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--magenta);
+    margin: 14px 0 6px;
+  }
+  .door:first-child { margin-top: 0; }
+
+  .mini {
+    background: var(--bot-bg);
+    border: 1px solid var(--bot-line);
+    border-radius: 3px 10px 10px 10px;
+    padding: 10px 13px;
+    font-size: 13.5px;
+    margin-bottom: 7px;
+  }
+  .trigger {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--mid);
+    margin: 0 0 7px;
+  }
+
+  /* ---------- recurring ---------- */
+
+  .recur {
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    background: var(--surface);
+    padding: 20px 22px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+  }
+  @media (max-width: 680px) { .recur { grid-template-columns: 1fr; } }
+  .recur h3 { margin: 0 0 8px; font-size: 16px; font-weight: 700; }
+  .recur p { margin: 0 0 10px; font-size: 14px; color: var(--ink-soft); }
+
+  /* ---------- open items ---------- */
+
+  .open {
+    margin-top: 48px;
+    border-top: 2px solid var(--line);
+    padding-top: 26px;
+  }
+  .open h2 { font-size: 19px; font-weight: 800; margin: 0 0 4px; letter-spacing: -.01em; }
+  .open > p { color: var(--mid); font-size: 14px; margin: 0 0 18px; max-width: 62ch; }
+
+  .qs { display: grid; gap: 9px; }
+  .q {
+    display: grid;
+    grid-template-columns: 26px minmax(0, 1fr) auto;
+    gap: 13px;
+    align-items: start;
+    padding: 12px 15px;
+    border: 1px solid var(--line-soft);
+    border-left: 3px solid var(--amber);
+    border-radius: 4px;
+    background: var(--surface);
+    font-size: 14px;
+  }
+  .q .n {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--mid);
+    padding-top: 1px;
+  }
+  .q .who {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--mid);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 2px 7px;
+    white-space: nowrap;
+  }
+  .q.blocker { border-left-color: var(--red); }
+  .q b { font-weight: 700; }
+  .q small { display: block; color: var(--mid); font-size: 13px; margin-top: 3px; }
+
+  footer {
+    margin-top: 40px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line-soft);
+    font-size: 13px;
+    color: var(--mid);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+  }
+  footer code {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 560px) {
+    .thread { grid-template-columns: 44px minmax(0, 1fr); column-gap: 10px; }
+    .marker { font-size: 10px; padding: 3px 5px; }
+    .wrap { padding: 28px 14px 56px; }
+  }
+</style>
+
+<div class="wrap">
+
+  <header>
+    <p class="eyebrow">[Empresa] · spec de conversa</p>
+    <h1>Fluxo da CintIA</h1>
+    <p class="lede">A sequência inteira de mensagens da assistente de cotação no WhatsApp, com os desvios de cada ponto. O trilho central é a conversa que dá certo; o que sai pela lateral é tudo que pode acontecer no caminho.</p>
+    <div class="meta">
+      <span class="chip">versão <b>v1</b></span>
+      <span class="chip"><b>6</b> mensagens da CintIA</span>
+      <span class="chip"><b>2</b> respostas da farmácia</span>
+      <span class="chip">atualizado <b>24/09/2026</b></span>
+    </div>
+  </header>
+
+  <div class="legend">
+    <div><span class="swatch bot"></span> CintIA</div>
+    <div><span class="swatch user"></span> farmácia</div>
+    <div><span class="swatch fork"></span> desvio</div>
+    <div><span class="swatch stop"></span> encerra sem lead</div>
+    <div><code style="font-family:var(--mono);font-size:11.5px">⏱ 600ms</code> intervalo entre bolhas</div>
+  </div>
+
+  <div class="phase">
+    <h2>Primeira conversa</h2>
+    <span class="count">do "oi" até a cotação</span>
+  </div>
+  <p class="phase-note">A farmácia responde duas vezes: o produto e o CNPJ. Tudo o mais é a CintIA. A pergunta vem sempre na última bolha da sequência, porque é ela que fica na tela quando a pessoa vai digitar.</p>
+
+  <div class="thread">
+
+    <!-- entrada -->
+    <div class="step">
+      <div class="rail"><span class="marker you">IN</span></div>
+      <div class="bay">
+        <div class="bubble user">oi</div>
+      </div>
+    </div>
+
+    <!-- M1 -->
+    <div class="step">
+      <div class="rail"><span class="marker">M1</span></div>
+      <div class="bay">
+        <div class="bubble"><p>Oi! 👋 Eu sou a <b>CintIA</b>, da [Empresa].</p></div>
+        <p class="gap">⏱ 600ms</p>
+        <div class="bubble">
+          <p>Qual medicamento ou produto você quer cotar hoje?</p>
+          <p>Me manda o nome e eu te digo o preço em todas as distribuidoras, e quem tá com o menor 💊</p>
+        </div>
+        <div class="branches">
+          <div class="branch">
+            <p class="branch-head">Se o anúncio já trouxe o produto</p>
+            <div class="card">Pula a M1 inteira e vai direto pra busca. Quem chegou pelo anúncio com texto pronto não precisa de apresentação antes de ser atendido.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- produto -->
+    <div class="step">
+      <div class="rail"><span class="marker you">↩</span></div>
+      <div class="bay">
+        <div class="bubble user">dipirona 500mg</div>
+        <div class="branches">
+          <div class="branch">
+            <p class="branch-head">Não achou o produto</p>
+            <div class="card">
+              <span class="say">"Hmm, esse eu não achei aqui 🤔 Tenta o princípio ativo ou a marca?"</span>
+              <div>Até 2 tentativas, depois oferece especialista.</div>
+            </div>
+          </div>
+          <div class="branch">
+            <p class="branch-head">Produto ambíguo</p>
+            <div class="card">
+              <span class="say">"Opa, achei mais de um! Qual desses?"</span>
+              <div><i>List message</i> com até 5 opções.</div>
+            </div>
+          </div>
+          <div class="branch">
+            <p class="branch-head">Mandou vários itens de uma vez</p>
+            <div class="card">
+              <span class="say">"Ixi, por enquanto eu coto um por vez 🙂 Qual primeiro?"</span>
+            </div>
+          </div>
+          <div class="branch">
+            <p class="branch-head">Mandou foto de falteiro</p>
+            <div class="card warn">
+              <span class="say">"Ixi, ler foto de falteiro eu ainda não sei fazer 😅 Tô aprendendo ainda. Mas me manda o nome de um produto escrito que eu já te digo o preço em todas as distribuidoras 💊"</span>
+              <div style="margin-top:8px">O site ainda promete essa função. Medir quantas fotos chegam: é a régua da urgência de alterar o site.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- M2 -->
+    <div class="step">
+      <div class="rail"><span class="marker">M2</span></div>
+      <div class="bay">
+        <div class="bubble typing"><span class="dots"><i></i><i></i><i></i></span> typing · 800ms a 1,5s</div>
+        <div style="height:8px"></div>
+        <div class="bubble"><p>Hmm, deixa eu procurar aqui pra você...</p></div>
+        <div class="branches">
+          <div class="branch">
+            <p class="branch-head">Regra</p>
+            <div class="card">Essa bolha <b>só entra se a busca passar de 3 segundos</b>. Se a cotação volta instantânea, ela atrapalha em vez de ajudar. Passando de 15s: <span class="say">"Ixi, tá demorando mais que o normal hoje. Já já eu te mando 🙂"</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- M3 -->
+    <div class="step">
+      <div class="rail"><span class="marker">M3</span></div>
+      <div class="bay">
+        <div class="bubble">
+          <p><b>Encontrei! Dipirona Sódica 500mg 20cp</b></p>
+          <p>📦 <b>6 distribuidoras</b> têm hoje<br>💰 Os preços vão de <b>R$ 1,21</b> a <b>R$ 2,34</b></p>
+        </div>
+        <p class="gap">⏱ 700ms</p>
+        <div class="bubble">
+          <p>Pra te mostrar qual tá com o menor preço, preciso do <b>CNPJ da sua farmácia</b> 🙂</p>
+          <p class="fine">CNPJ é dado público. Uso só pra confirmar que é farmácia, porque condição de distribuidora é informação restrita.</p>
+        </div>
+        <div class="branches">
+          <div class="branch">
+            <p class="branch-head">A regra de ouro</p>
+            <div class="card">Faixa e quantidade aparecem <b>de graça</b>, e provam que a base é real. O que o CNPJ destrava é <b>qual distribuidora está com qual preço</b>.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- cnpj -->
+    <div class="step">
+      <div class="rail"><span class="marker you">↩</span></div>
+      <div class="bay">
+        <div class="bubble user">11.222.333/0001-81</div>
+        <div class="branches">
+          <div class="branch">
+            <p class="branch-head">Não quer dar o CNPJ</p>
+            <div class="card stop">
+              <span class="say">"Ó, é porque condição de distribuidora é informação restrita a farmácia, então eu não posso mostrar pra qualquer pessoa."</span>
+              <div style="margin-top:8px">Se recusar de novo, <b>não insiste uma terceira vez</b>: <span class="say">"Sem problema! Se mudar de ideia é só me mandar 👋"</span></div>
+              <span class="outcome nolead">zero lead · log recusou_cnpj</span>
+            </div>
+          </div>
+          <div class="branch">
+            <p class="branch-head">CNPJ com erro de digitação</p>
+            <div class="card">
+              <span class="say">"Hmm, esse CNPJ não bateu aqui. Confere pra mim?"</span>
+              <div>Erro inline, até 3 tentativas.</div>
+            </div>
+          </div>
+          <div class="branch">
+            <p class="branch-head">Rota C · farmácia fora de SP</p>
+            <div class="card warn">
+              <span class="say">"Poxa, hoje eu atendo só São Paulo 😕 Me deixa seu e-mail que eu te aviso quando a gente chegar em [UF]?"</span>
+              <div style="margin-top:8px">Coleta <b>e-mail</b>, não WhatsApp: a [Empresa] não pode iniciar conversa, então avisar por aqui exigiria template.</div>
+              <span class="outcome wait">lista de espera · sem comercial</span>
+            </div>
+          </div>
+          <div class="branch">
+            <p class="branch-head">Rota D · não é farmácia</p>
+            <div class="card stop">
+              <span class="say">"Ó, esse CNPJ não é de farmácia, então eu não consigo mostrar preço de distribuidora. É informação restrita 🙂"</span>
+              <div style="margin-top:8px">Entrega o <b>PMC</b> do produto e encerra gentil.</div>
+              <span class="outcome nolead">zero CRM · só analytics</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- M4 -->
+    <div class="step">
+      <div class="rail"><span class="marker">M4</span></div>
+      <div class="bay">
+        <div class="bubble"><p>✅ <b>DROGARIA X</b>, de Osasco. Achei você!</p></div>
+        <p class="gap">⏱ 600ms</p>
+        <div class="bubble">
+          <p><b>Dipirona 500mg 20cp</b> hoje:</p>
+          <div class="prices">
+            <div class="row best"><span>Distribuidora D<span class="tag">menor preço</span></span><span class="val">R$ 1,21</span></div>
+            <div class="row"><span>Distribuidora A</span><span class="val">R$ 1,45</span></div>
+            <div class="row"><span>Distribuidora F</span><span class="val">R$ 1,60</span></div>
+            <div class="row"><span>Distribuidora C</span><span class="val">R$ 1,88</span></div>
+            <div class="row"><span>Distribuidora G</span><span class="val">R$ 2,02</span></div>
+            <div class="row"><span>Distribuidora B</span><span class="val">R$ 2,34</span></div>
+          </div>
+          <p>💰 Média: <b>R$ 1,75</b> · variação de hoje: <b>93%</b></p>
+        </div>
+        <div class="branches">
+          <div class="branch">
+            <p class="branch-head">Imparcialidade</p>
+            <div class="card">Ordenada do menor pro maior, menor preço em negrito, <b>nenhum adjetivo em nenhuma linha</b>. A variação é fato sem sujeito ("variação de hoje: 93%"), nunca acusação ("a mais cara cobra 93% mais"). Sem 🏆: a lista é de parceiros, não é disputa.</div>
+          </div>
+          <div class="branch">
+            <p class="branch-head">Casos da entrega</p>
+            <div class="card">
+              <b>Só uma tem:</b> mostra e diz que é a única com estoque hoje.<br>
+              <b>Ninguém tem:</b> <span class="say">"Poxa, ninguém tá com esse item hoje 😕 Me chama em uns dias que eu confiro de novo."</span> Sem prometer aviso automático.<br>
+              <b>Mais de 12 linhas:</b> as 10 mais baratas + "e outras N acima de R$ X,XX".
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- M5 -->
+    <div class="step">
+      <div class="rail"><span class="marker">M5</span></div>
+      <div class="bay">
+        <p class="gap">⏱ 700ms</p>
+        <div class="bubble">
+          <p>Ah, importante: esses são os <b>preços de referência</b> de hoje 🙂</p>
+          <p>Prazo de pagamento, pedido mínimo e, em algumas distribuidoras, o próprio preço dependem do cadastro da sua farmácia. Se quiser ver como fica pra você, é só me falar.</p>
+        </div>
+        <div class="branches">
+          <div class="branch">
+            <p class="branch-head">Por que essa mensagem existe</p>
+            <div class="card">
+              Protege a confiança (preço diferente na hora da compra mata a relação) e é o <b>melhor gancho de cadastro que a CintIA tem</b>: não é "se cadastra pra usar mais", é "se cadastra pra ver o SEU número".
+              <div style="margin-top:8px">Apurado no código: o pipeline tem <b>dois regimes</b>. Em Distribuidoras W, X, Y e Z o preço é <b>idêntico para todos</b>; nas demais varia por CNPJ. Prazo de pagamento é sempre por cliente. <b>Não existe média de preço no pipeline</b>, por isso a palavra saiu da M5. A "Média: R$ 1,75" da M4 é outra coisa: é a média aritmética das linhas mostradas, calculada na hora. Essa pode ficar.</div>
+            </div>
+          </div>
+          <div class="branch">
+            <p class="branch-head">As três travas</p>
+            <div class="card stop">
+              Nunca antes da cotação, porque ressalva antes da entrega esvazia o valor.<br>
+              Nunca com link ou botão na 1ª conversa: o convite fica em "é só me falar".<br>
+              Nunca pedir desculpa, é informação a mais e não a menos.<br>
+              <b>Nunca dizer "média".</b>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- M6 -->
+    <div class="step">
+      <div class="rail"><span class="marker">M6</span></div>
+      <div class="bay">
+        <p class="gap">⏱ 700ms</p>
+        <div class="bubble">
+          <p>Me salva aqui nos contatos como <b>CintIA</b> 💜</p>
+          <p>Aí quando precisar de preço você me chama direto, sem procurar nada. Tô por aqui todo dia.</p>
+        </div>
+        <div class="vcard">
+          <span class="av">💊</span>
+          <div>
+            <b>CintIA</b>
+            <span>+55 11 9XXXX-XXXX</span>
+          </div>
+        </div>
+        <div class="branches">
+          <div class="branch">
+            <p class="branch-head">Por que é o item mais estratégico da spec</p>
+            <div class="card">
+              A [Empresa] não pode iniciar conversa, então não existe remarketing nem régua. <b>O contato salvo é o único canal de retorno que existe.</b> Sem ele, cada cotação custa uma nova mídia.
+              <div style="margin-top:8px">O vCard faz salvar virar <b>um toque</b> em vez de sete.</div>
+            </div>
+          </div>
+          <div class="branch">
+            <p class="branch-head">Por que o cadastro não é pedido aqui</p>
+            <div class="card">Cotação, "se cadastra" e "me salva" na mesma visita são três pedidos seguidos. Na 1ª conversa o único pedido formal é o contato; <b>o convite de cadastro com botão entra da 2ª cotação em diante</b>.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="phase" style="margin-top:34px">
+    <h2>Depois da cotação</h2>
+    <span class="count">os dois desfechos</span>
+  </div>
+  <p class="phase-note">A cotação entregue é o fim do serviço, não o fim da conversa. A partir daqui só existem dois caminhos, e os dois precisam estar desenhados.</p>
+
+  <div class="fork">
+
+    <div class="lane a">
+      <div class="lane-head">
+        <span class="tag">Caminho A</span>
+        <h3>A farmácia some</h3>
+        <p>Veio buscar um número, recebeu o número, foi tocar a farmácia dela. É o desfecho mais comum e <b>não é fracasso</b>.</p>
+      </div>
+      <div class="lane-body">
+        <p style="margin:0 0 12px;font-size:14px"><b>O que a CintIA faz: nada.</b> A M6 já é o encerramento — deixa a porta aberta sem pedir resposta.</p>
+        <ul class="never">
+          <li>Não manda "posso ajudar em mais alguma coisa?". Pergunta aberta obriga quem já foi atendido a responder.</li>
+          <li>Não manda "tudo certo por aí?" meia hora depois.</li>
+          <li>Não re-engaja no dia seguinte. Exigiria template e quebra a regra 2.</li>
+        </ul>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--line-soft);font-size:13.5px;color:var(--mid)">
+          Funil: <code style="font-family:var(--mono)">cotação_entregue</code> + <code style="font-family:var(--mono)">sem_resposta</code>.
+          <span class="outcome lead" style="margin-top:8px">✓ segue MQL</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="lane b">
+      <div class="lane-head">
+        <span class="tag">Caminho B</span>
+        <h3>Intenção declarada</h3>
+        <p>Duas portas de entrada. Só a primeira bolha muda; da segunda em diante é igual.</p>
+      </div>
+      <div class="lane-body">
+        <p class="door">Porta 1 · "quero comprar"</p>
+        <p class="trigger">quero comprar · como compro · como faço pedido · botão Criar conta</p>
+        <div class="mini">Opa! Então ó: isso que você acabou de fazer aqui, a plataforma da [Empresa] faz com a sua lista inteira 🙂</div>
+
+        <p class="door">Porta 2 · "quero ver o meu preço"</p>
+        <p class="trigger">a resposta ao "é só me falar" da M5 · quero · quero sim · quanto sai pra mim</p>
+        <div class="mini">Opa! Então, é assim: com a conta criada, eu consigo enxergar as condições que o seu CNPJ tem em cada distribuidora 🙂 Aí em vez do preço médio, você vê o valor exato que cada uma cobra de você.</div>
+
+        <p class="door">As duas seguem iguais daqui</p>
+        <div class="mini">Você vê todas as distribuidoras lado a lado, escolhe de onde vem cada item e fecha tudo num pedido só.</div>
+        <div class="mini">
+          É gratuita pra farmácia de verdade, sem mensalidade. Quem banca a operação são as indústrias e as distribuidoras.
+          <div style="margin-top:7px">Quer que eu te mande o link? São duas telinhas rápidas, e aí eu já consigo te mostrar o preço da sua farmácia 👇</div>
+          <div class="btnrow">
+            <span class="btn">Criar conta grátis</span>
+            <span class="btn">Falar com especialista</span>
+          </div>
+        </div>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--line-soft);font-size:13.5px;color:var(--mid)">
+          Máximo 3 bolhas. Nenhuma palavra institucional. Dizer quem paga é o que torna o "é grátis" crível.
+          <span class="outcome lead" style="margin-top:8px">★ lead quente · com o produto cotado no payload</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="phase" style="margin-top:34px">
+    <h2>Da segunda vez em diante</h2>
+    <span class="count">uma resposta e pronto</span>
+  </div>
+  <p class="phase-note">O CNPJ é perguntado uma vez na vida daquele telefone. Sem M1, sem M3, sem M6.</p>
+
+  <div class="recur">
+    <div>
+      <div class="bubble user" style="margin-left:0;margin-bottom:10px">losartana 50mg</div>
+      <div class="bubble">
+        <p>E aí, <b>DROGARIA X</b>! 👋</p>
+        <p><b>Losartana Potássica 50mg 30cp:</b></p>
+        <div class="prices">
+          <div class="row best"><span>Distribuidora A<span class="tag">menor preço</span></span><span class="val">R$ 4,10</span></div>
+          <div class="row"><span>Distribuidora D</span><span class="val">R$ 4,55</span></div>
+          <div class="row"><span>Distribuidora C</span><span class="val">R$ 5,20</span></div>
+        </div>
+        <p>💰 Média: <b>R$ 4,62</b></p>
+      </div>
+    </div>
+    <div>
+      <h3>O que muda no recorrente</h3>
+      <p>A <b>nota do preço de referência não se repete toda vez</b>. Aparece na 1ª cotação e depois a cada ~5, ou quando a farmácia perguntar sobre preço. Repetir sempre vira ressalva chata.</p>
+      <p>O <b>convite de cadastro entra a partir da 2ª cotação</b>, e aí sim com botão.</p>
+      <p>A saudação varia pra não parecer script: <span style="font-style:italic">"Oi de novo! 👋 Qual produto hoje?"</span> · <span style="font-style:italic">"E aí, DROGARIA X! O que vamos cotar?"</span> · <span style="font-style:italic">"Bom dia! 💊 Manda o remédio aí."</span></p>
+      <p style="margin-bottom:0"><b>Sinal de alta intenção:</b> farmácia que cota 3+ produtos em 7 dias sem pedir especialista. Está usando e não pediu ajuda — melhor hora pra ligar.</p>
+    </div>
+  </div>
+
+  <div class="open">
+    <h2>O que ainda trava</h2>
+    <p>Apuração de 24/09 no site, na plataforma, no código e no data warehouse. De seis pendências, <b>quatro foram respondidas</b>. As três que restam não são de apuração: duas são decisões e uma é uma pergunta de uma linha.</p>
+    <div class="qs">
+      <div class="q blocker">
+        <span class="n">05</span>
+        <div><b>O comercial aborda MQL que não pediu contato?</b><small>Decisão, não apuração. Se abordar, a resposta da CintIA sobre "vou receber ligação?" vira mentira e precisa mudar.</small></div>
+        <span class="who">executivo comercial</span>
+      </div>
+      <div class="q blocker">
+        <span class="n">06</span>
+        <div><b>A lista de espera de outra UF coleta e-mail?</b><small>Decisão sua. Sem e-mail, a Rota C não pode prometer aviso nenhum, porque a [Empresa] não inicia conversa.</small></div>
+        <span class="who">Luiza</span>
+      </div>
+      <div class="q">
+        <span class="n">02</span>
+        <div><b>Qual o valor de <code style="font-family:var(--mono);font-size:12.5px">show_st</code> na busca sem cliente logado?</b><small>O ST existe como campo próprio, ao lado de price_final, e há um booleano que decide se ele aparece. Só falta saber qual valor vale no contexto público.</small></div>
+        <span class="who">produto</span>
+      </div>
+      <div class="q">
+        <span class="n">09</span>
+        <div><b>Existe frete no modelo?</b><small>Não achei campo de frete na condição comercial. Pode estar embutido no preço da distribuidora, ou simplesmente fora do modelo.</small></div>
+        <span class="who">produto</span>
+      </div>
+    </div>
+
+    <h2 style="margin-top:32px">O que a apuração respondeu</h2>
+    <p>E as duas decisões de escopo que ela abriu.</p>
+    <div class="qs">
+      <div class="q" style="border-left-color:var(--green)">
+        <span class="n">01</span>
+        <div><b>O preço não é média. São dois regimes.</b><small>General-prices (Distribuidoras W, X, Y, Z): um documento por EAN, preço idêntico para todos. Per-client: um documento por cliente, varia por CNPJ. Prazo de pagamento e habilitação são sempre por cliente. A palavra "média" saiu de toda a spec.</small></div>
+        <span class="who">✓ no código</span>
+      </div>
+      <div class="q warn" style="border-left-color:var(--amber)">
+        <span class="n">03</span>
+        <div><b>A base tem estoque real, e isso virou decisão de escopo.</b><small>stock é quantidade por cliente × distribuidora × EAN, com job de sync próprio. E o buscador de preço funciona como portal de encomendas: o que ele vende na home é estoque em tempo real, não preço. A CintIA v1 mostra só preço, ou seja, entrega menos que a página que a originou.</small></div>
+        <span class="who">decidir</span>
+      </div>
+      <div class="q warn" style="border-left-color:var(--amber)">
+        <span class="n">07</span>
+        <div><b>O cadastro tem 11 campos em 2 etapas.</b><small>Nome, CNPJ, e-mail, senha e WhatsApp; depois nome da farmácia, estado, cidade, cargo, horário de contato, como conheceu, mais aceite de termos. "Leva menos de um minuto" foi cortado da spec. E fica o registro: 11 campos é muito atrito para um cadastro gratuito de topo de funil.</small></div>
+        <span class="who">✓ na plataforma</span>
+      </div>
+      <div class="q" style="border-left-color:var(--green)">
+        <span class="n">10</span>
+        <div><b>A busca aceita princípio ativo.</b><small>O campo do buscador de preço aceita EAN, nome ou princípio ativo, e o site tem seção própria para isso. A CintIA pode responder "tem genérico mais barato?" de verdade, e talvez até de forma ativa.</small></div>
+        <span class="who">✓ no site</span>
+      </div>
+      <div class="q" style="border-left-color:var(--green)">
+        <span class="n">11</span>
+        <div><b>Pedido mínimo existe e varia por distribuidora.</b><small>Fixo na Distribuidora W, por cliente na Distribuidora Y. Há também múltiplo de fardo e faixas de desconto progressivo. É mais um item que o cadastro destrava.</small></div>
+        <span class="who">✓ no data warehouse</span>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <span>Spec completa: <code>cintia-ura-whatsapp.md</code></span>
+    <span>Respostas fora do fluxo: <code>cintia-faq.md</code></span>
+    <span>Benchmark: <code>cintia-benchmark.md</code></span>
+  </footer>
+
+</div>
