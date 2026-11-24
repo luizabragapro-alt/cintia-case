@@ -5,23 +5,41 @@
 **Case de produto para geração de demanda** · marketplace B2B de farmácia · 2026
 Papel: produto e marketing (concepção, spec, persona, copy, prompts e métricas)
 
-> Dados da empresa anonimizados: nome, domínios, pessoas, números internos e ferramentas aparecem genéricos.
+> Dados da empresa anonimizados: nome, domínios, pessoas e ferramentas aparecem genéricos. Os números de mídia são reais (Gerenciador de Anúncios da Meta).
 
 ---
 
-## O problema
+## Em resumo
 
-- O dono de farmácia vive no WhatsApp, não em landing page.
-- A mídia paga gerava lead por formulário: caro por lead e com pouca qualificação.
-- Comparar preço entre distribuidoras exigia abrir vários portais, um por distribuidora.
+A CintIA é o **segundo capítulo de uma oferta que já tinha funcionado**. Uma landing page provou que dono de farmácia quer saber, de graça, quanto custa um remédio em cada distribuidora. Quando ela bateu no limite, levamos a mesma oferta para o WhatsApp: a farmácia cota conversando, informa o CNPJ e vira lead qualificado, sem formulário.
 
-## A aposta
+## 1 · A oferta que funcionou: uma landing page validou a demanda
 
-Trocar o formulário por uma conversa que **entrega valor antes de pedir qualquer coisa**.
-A farmácia manda o nome do remédio e recebe, em segundos, o preço em todas as distribuidoras que têm o item, do menor para o maior. Sem app, sem login, de graça.
-O CNPJ é pedido para liberar a cotação, e é aí que nasce o lead qualificado.
+O buscador de preço é uma página pública: a farmácia pesquisa o preço de um remédio e deixa o contato para ver o resultado completo. Com anúncios na Meta, virou a campanha que mais gerava lead na conta.
 
-**Hipótese:** menos fricção gera custo por lead (CPL) menor que o da mídia paga, com um lead mais qualificado (CNPJ validado na conversa).
+| 962 leads | R$ 12,89 | nº 1 |
+|---|---|---|
+| de março a julho de 2026 | por lead | campanha de lead da conta |
+
+## 2 · Onde ela parou: o lead chegava, mas não ficava
+
+Em agosto, o custo por lead disparou. Pior: quase ninguém que preenchia o formulário virava cliente.
+
+| R$ 81,60 | 105 → 1 | −50% |
+|---|---|---|
+| por lead em agosto (6× mais) | leads que viraram farmácia ativa | na taxa de clique do anúncio |
+
+O diagnóstico: a farmácia via o preço e ia embora. Não havia conversa, nem relação, nem motivo para voltar.
+
+## 3 · A virada: ir até o lead, em vez de puxá-lo para uma página
+
+O cliente ideal é o dono de farmácia independente: passa o dia no balcão e resolve tudo pelo WhatsApp, inclusive com distribuidoras e representantes. A oferta foi até lá, com três ganhos sobre a landing:
+
+- **A conversa substitui o formulário:** ele pede o preço do jeito que já pede para o representante.
+- **O lead chega qualificado:** o CNPJ é validado na hora e separa farmácia de curioso.
+- **Existe caminho de volta:** quem salva o contato cota de novo sem anúncio nenhum.
+
+**Hipótese:** com a mesma oferta, a conversa gera lead mais barato que a landing em queda e converte mais em farmácia ativa, porque o lead já conversou.
 
 ## ▶️ Teste você mesmo
 
@@ -103,6 +121,14 @@ No benchmark, **nenhum concorrente direto cotava dentro do WhatsApp**: eles usam
 Regra de comunicação: falar do que a gente faz ("cotação completa no WhatsApp"), nunca "somos os únicos".
 
 ## Métricas
+
+A régua é a própria landing que veio antes:
+
+| Métrica | Landing (buscador de preço) | Meta da CintIA |
+|---|---|---|
+| Custo por lead | R$ 12,89 → R$ 81,60 | abaixo da landing em queda |
+| Lead → farmácia ativa | 1 em 105 (ago/2026) | maior, porque o lead já conversou |
+| Volta sem anúncio | nenhuma | conversas sem origem de anúncio ÷ total |
 
 - **CPL da conversa com CNPJ** contra o CPL da mídia paga atual.
 - **Taxa de conclusão** (conversa → cotação entregue): meta ≥ 50%.
